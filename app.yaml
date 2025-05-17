@@ -1,0 +1,3 @@
+runtime: python310
+# entrypoint: waitress-serve --host=0.0.0.0 --port=8080 app:app
+entrypoint: python -m waitress --host=0.0.0.0 --port=8080 app:app
