@@ -225,6 +225,12 @@
             margin-top: 10px;
             display: none;
         }
+        
+        .social-select {
+            margin-top: 10px;
+            display: none;
+        }
+
 
 
 
@@ -252,14 +258,27 @@
                 </select>
 
                 <select id="literatureType" class="literature-select">
+                    <option value="" disabled selected>Select Sub-Subject</option>
                     <option value="literature">Literature</option>
                     <option value="supplementary">Supplementary</option>
                 </select>
-                
+
                 <select id="quizChapter">
                     <option value="" disabled selected>Select Chapter</option>
                     <!-- Loaded dynamically -->
                 </select>
+                
+
+                
+                <!-- <select id="socialType" class="social-select">
+                    <option value="" disabled selected>Select Sub-Subject</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Civics">Civics</option>
+                    <option value="Economics">Economics</option>
+                </select> -->
+                
+
 
 
                 
@@ -279,66 +298,6 @@
     </div>
 
     <script>
-
-    //     // Load subjects based on user's class/stream
-    //     document.addEventListener('DOMContentLoaded', async () => {
-    //         const userRes = await fetch('/api/user');
-    //         const userData = await userRes.json();
-            
-    //         const subjectSelect = document.getElementById('quizSubject');
-    //         const classLevel = userData.user.class;
-    //         const stream = userData.user.stream;
-            
-    //         // Get subjects for this class/stream
-    //         const subjectsRes = await fetch(`/api/get-subjects?class=${classLevel}&stream=${stream}`);
-    //         const subjects = await subjectsRes.json();
-            
-    //         subjectSelect.innerHTML = `
-    //             <option value="" disabled selected>Select Subject</option>
-    //             ${subjects.map(subj => `<option value="${subj}">${subj}</option>`).join('')}
-    //         `;
-    //     });
-        
-    //     // When subject changes, load chapters
-    //     document.getElementById('quizSubject').addEventListener('change', async function() {
-    //         const subject = this.value;
-    //         const chapterSelect = document.getElementById('quizChapter');
-            
-    //         chapterSelect.disabled = true;
-    //         chapterSelect.innerHTML = '<option value="" disabled selected>Loading chapters...</option>';
-            
-    //         // Mock implementation - replace with actual API call
-    //         setTimeout(() => {
-    //             const mockChapters = [
-    //                 "chapter (1)",
-    //                 "chapter (2)",
-    //                 "chapter (3)",
-    //                 "chapter (4)",
-    //                 "chapter (5)",
-    //                 "chapter (6)",
-    //                 "chapter (7)",
-    //                 "chapter (8)"
-    //             ];
-                
-    //             chapterSelect.innerHTML = `
-    //                 <option value="" disabled selected>Select Chapter</option>
-    //                 ${mockChapters.map(chap => `<option value="${chap}">${chap}</option>`).join('')}
-    //             `;
-    //             chapterSelect.disabled = false;
-    //         }, 500);
-    //     });
-        
-    //    async function startQuiz() {
-    // const subject = document.getElementById('quizSubject').value;
-    // const chapter = document.getElementById('quizChapter').value;
-    // const difficulty = document.getElementById('quizDifficulty').value;
-    
-    // if (!subject || !chapter) {
-    //     alert('Please select both subject and chapter');
-    //     return;
-    // }
-    
-    // Show loading state
     
         let currentQuiz = { questions: [], correctAnswers: [] };
 
@@ -367,12 +326,24 @@
                 const subject = this.value;
                 const chapterSelect = document.getElementById('quizChapter');
                 const literatureSelect = document.getElementById('literatureType');
+                // const socialSelect = document.getElementById('socialType');
 
                 if (subject.toLowerCase() === 'english') {
                     literatureSelect.style.display = 'block';
-                } else {
+                }
+                                
+                else {
                     literatureSelect.style.display = 'none';
                 }
+ 
+                // if (subject.toLowerCase() === 'social') {
+                //     socialSelect.style.display = 'block';
+                // }
+                
+                // else {
+                //     socialSelect.style.display = 'none';
+                // }
+                
 
                 chapterSelect.disabled = true;
                 chapterSelect.innerHTML = '<option value="" disabled selected>Loading chapters...</option>';
@@ -409,6 +380,8 @@
                 fullPath += `/${literatureType}`;
             }
             fullPath += `/${chapter.replace(/ /g, '_')}`;
+            // fullPath+=`.pdf`;
+            console.log(fullPath);
             
     
     document.getElementById('quizArea').innerHTML = `

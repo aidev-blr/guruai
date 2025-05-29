@@ -124,7 +124,7 @@ submitButton.addEventListener('click', async () => {
   const loadingMsg = appendChatMessage('bot', '📄 Loading PDF...');
 
   try {
-    const res = await fetch('/api/chat/submit-path', {
+    const res = await fetch('/api/chatbot/submit-path', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ path })
@@ -174,7 +174,7 @@ async function sendMessage() {
   const loadingMsg = appendChatMessage("bot", "🤖 Thinking...");
 
   try {
-    const res = await fetch('/api/chat/ask', {
+    const res = await fetch('/api/chatbot/ask', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question, path })

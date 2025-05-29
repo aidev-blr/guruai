@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Create Blueprint
-chat_bp = Blueprint('chat', __name__, template_folder='templates')
+chatbot_bp = Blueprint('chatbot', __name__, url_prefix='/chatbot', template_folder='templates')
 
 # Initialize Firebase
 if not firebase_admin._apps:
@@ -30,29 +30,19 @@ if not firebase_admin._apps:
 # Load embedding model
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# Authentication decorator
-def chat_login_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if 'user' not in session:
-            return jsonify({'error': 'Authentication required'}), 401
-        return f(*args, **kwargs)
-    return decorated
 
-# ---------------- ROUTES ----------------
-
-@chat_bp.route('/chat.html')
-@chat_login_required
+@chatbot_bp.route('/chatbot.html')
+# @chat_login_required
 def chat_page():
-    return render_template('chat.html')
+    return render_template('chatbot.html')
 
-@chat_bp.route('/api/chat/user')
-@chat_login_required
-def get_chat_user():
-    return jsonify({'user': {'email': session.get('user'), 'name': session.get('user_name', '')}})
+# @chatbot_bp.route('/api/chatbot/user')
+# # @chat_login_required
+# def get_chat_user():
+#     return jsonify({'user': {'email': session.get('user'), 'name': session.get('user_name', '')}})
 
-@chat_bp.route('/api/chat/submit-path', methods=['POST'])
-@chat_login_required
+@chatbot_bp.route('/api/chatbot/submit-path', methods=['POST'])
+# @chat_login_required
 def submit_path():
     try:
         data = request.get_json()
@@ -94,8 +84,8 @@ def submit_path():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
-@chat_bp.route('/api/chat/ask', methods=['POST'])
-@chat_login_required
+@chatbot_bp.route('/api/chatbot/ask', methods=['POST'])
+# @chat_login_required
 def ask():
     try:
         data = request.get_json()
@@ -113,7 +103,7 @@ def ask():
             print(f"Chunks path does not exist: {chunks_path}")  # Debug log
             return jsonify({
                 "error": "Chunks not found",
-                "solution": "Submit the PDF path first using /api/chat/submit-path"
+                "solution": "Submit the PDF path first using /api/chatbot/submit-path"
             }), 404
 
         with open(chunks_path, 'r') as f:
@@ -234,5 +224,5 @@ if __name__ == '__main__':
     from flask import Flask
     app = Flask(__name__)
     app.secret_key = os.getenv('SECRET_KEY')
-    app.register_blueprint(chat_bp)
-    app.run(debug=True, port=5001)
+    app.register_blueprint(chatbot_bp)
+    app.run(debug=True, port=5002)

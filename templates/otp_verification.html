@@ -81,50 +81,90 @@
 <body>
   <div class="otp-container">
     <h2>Verify Your OTP</h2>
-    <p>A one-time password (OTP) has been sent to your email. Please enter it below to verify your account.</p>
+    <p id="otp-message">A one-time password (OTP) has been sent to your email. Please enter it below to verify your account.</p>
     
     <form id="otpForm" class="otp-form">
       <label for="otp">Enter OTP:</label>
       <input type="text" id="otp" name="otp" placeholder="Enter OTP" required maxlength="6">
       <button type="submit">Verify OTP</button>
+      <br>
+      <button type="button" id="resendBtn">Resent OTP</button>
     </form>
     
     <p id="error-message" class="error-message"></p>
   </div>
 
-  <script>
+<script>
     document.getElementById('otpForm').addEventListener('submit', function(event) {
-      event.preventDefault();
+        event.preventDefault();
 
-      const otp = document.getElementById('otp').value;
-      const errorMessageElement = document.getElementById('error-message');
+        const otp = document.getElementById('otp').value;
+        const errorMessageElement = document.getElementById('error-message');
+        const successMessageElement = document.getElementById('success-message');
 
-      errorMessageElement.textContent = '';
+        const otpMessageElement = document.getElementById('otp-message');
+        if (otpMessageElement) otpMessageElement.textContent = '';
 
-      if (!otp || otp.length !== 6) {
-        errorMessageElement.textContent = 'Please enter a valid 6-digit OTP.';
-        return;
-      }
+        errorMessageElement.textContent = '';
+        if (successMessageElement) successMessageElement.textContent = '';
 
-      fetch('/api/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ otp: otp })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 'success') {
-          alert('OTP verified successfully!');
-          window.location.href = '/login.html';
-        } else {
-          errorMessageElement.textContent = data.message || 'Invalid OTP. Please try again.';
+        if (!otp || otp.length !== 6) {
+            errorMessageElement.textContent = 'Please enter a valid 6-digit OTP.';
+            return;
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        errorMessageElement.textContent = 'An error occurred while verifying the OTP.';
-      });
+
+        fetch('/api/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ otp: otp })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                if (successMessageElement) {
+                    successMessageElement.textContent = 'OTP verified successfully!';
+                }
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 1500);
+            } else {
+                errorMessageElement.textContent = data.message || 'Invalid OTP. Please try again.';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorMessageElement.textContent = 'An error occurred while verifying the OTP.';
+        });
     });
-  </script>
+
+    document.getElementById('resendBtn').addEventListener('click', function() {
+        const errorMessageElement = document.getElementById('error-message');
+        const successMessageElement = document.getElementById('success-message');
+        const otpMessageElement = document.getElementById('otp-message');
+
+        errorMessageElement.textContent = '';
+        if (successMessageElement) successMessageElement.textContent = 'jddhjdhds';
+
+        fetch('/api/resend-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+              otpMessageElement.textContent = 'New OTP has been sent to your email!';
+                if (successMessageElement) {
+                    successMessageElement.textContent = 'New OTP has been sent to your email!';
+                }
+            } else {
+                errorMessageElement.textContent = data.message || 'Failed to resend OTP. Please try again.';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorMessageElement.textContent = 'An error occurred while resending the OTP.';
+        });
+    });
+</script>
 </body>
 </html>
