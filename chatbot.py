@@ -16,8 +16,8 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Create Blueprint
-chatbot_bp = Blueprint('chatbot', __name__, url_prefix='/chatbot', template_folder='templates')
+# Create Blueprint with corrected prefix
+chatbot_bp = Blueprint('chatbot', __name__, url_prefix='/api/chatbot', template_folder='templates')
 
 # Initialize Firebase
 if not firebase_admin._apps:
@@ -30,26 +30,22 @@ if not firebase_admin._apps:
 # Load embedding model
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
-
 @chatbot_bp.route('/chatbot.html')
-# @chat_login_required
 def chat_page():
     return render_template('chatbot.html')
 
-# @chatbot_bp.route('/api/chatbot/user')
-# # @chat_login_required
-# def get_chat_user():
-#     return jsonify({'user': {'email': session.get('user'), 'name': session.get('user_name', '')}})
-
-@chatbot_bp.route('/api/chatbot/submit-path', methods=['POST'])
-# @chat_login_required
+@chatbot_bp.route('/submit-path', methods=['POST'])
 def submit_path():
     try:
         data = request.get_json()
         gcs_path = data.get("path")
-        print(f"Received GCS path: {gcs_path}")
+        print(f"[DEBUG] Received GCS path: {gcs_path}")
+
         if not gcs_path:
-            return jsonify({"error": "Missing GCS path"}), 400
+            return jsonify({"status": "error", "message": "Missing GCS path"}), 400
+
+        if not gcs_path.startswith("gs://") or len(gcs_path.split('/')) < 4:
+            return jsonify({"status": "error", "message": "Invalid GCS path format"}), 400
 
         chunks_path = get_chunks_path(gcs_path)
 
@@ -82,10 +78,13 @@ def submit_path():
         }), 404
     except Exception as e:
         traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "status": "error",
+            "message": str(e),
+            "suggestion": "Unexpected error. Check logs or GCS permissions."
+        }), 500
 
-@chatbot_bp.route('/api/chatbot/ask', methods=['POST'])
-# @chat_login_required
+@chatbot_bp.route('/ask', methods=['POST'])
 def ask():
     try:
         data = request.get_json()
@@ -95,12 +94,11 @@ def ask():
         if not gcs_path or not question:
             return jsonify({"error": "Missing path or question"}), 400
 
-        # Debugging lines to log the input request data
         print(f"Received request - GCS Path: {gcs_path}, Question: {question}")
 
         chunks_path = get_chunks_path(gcs_path)
         if not os.path.exists(chunks_path):
-            print(f"Chunks path does not exist: {chunks_path}")  # Debug log
+            print(f"Chunks path does not exist: {chunks_path}")
             return jsonify({
                 "error": "Chunks not found",
                 "solution": "Submit the PDF path first using /api/chatbot/submit-path"
@@ -109,13 +107,10 @@ def ask():
         with open(chunks_path, 'r') as f:
             chunks = json.load(f)
 
-        # Debugging line to print out chunks loaded
-        print(f"Loaded {len(chunks)} chunks from: {chunks_path}")  # Debug log
+        print(f"Loaded {len(chunks)} chunks from: {chunks_path}")
 
         relevant_chunks = retrieve_relevant_chunks_with_scores(chunks, question)
-
-        # Debugging the relevant chunks found
-        print(f"Found {len(relevant_chunks)} relevant chunks for the question.")  # Debug log
+        print(f"Found {len(relevant_chunks)} relevant chunks for the question.")
 
         debug_info = [{
             "text": chunk[:200] + "..." if len(chunk) > 200 else chunk,
@@ -154,6 +149,16 @@ def get_chunks_path(gcs_path):
     bucket = parts[2]
     path = '/'.join(parts[3:])
     return f"{bucket}_{path.replace('/', '_').replace(' ', '')}_chunks.json"
+
+@chatbot_bp.route('/chapter-mapping', methods=['GET'])
+def serve_chapter_mapping():
+    try:
+        with open('chapter_mapping_quiz.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 def load_pdf_from_gcs(bucket_name, file_path):
     storage_client = storage.Client()
@@ -216,10 +221,11 @@ def generate_answer(context, query, model_name="gemini-2.0-flash-001"):
         response = model.generate_content(prompt)
         return response.text.strip()
     except Exception as e:
-        return "An error occurred while generating the answer."
+        import traceback
+        traceback.print_exc()  # 🔥 Add this
+        return f"An error occurred while generating the answer: {str(e)}"
 
 # ---------------- FLASK APP FOR TESTING ----------------
-
 if __name__ == '__main__':
     from flask import Flask
     app = Flask(__name__)
