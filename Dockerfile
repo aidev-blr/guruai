@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Optional: Set Google Cloud Project ID (but preferably via environment variables at deployment)
-ENV GOOGLE_CLOUD_PROJECT=my-rag-project-id 
+ENV GOOGLE_CLOUD_PROJECT=guru-ai-project-id 
 COPY keys/firebase_service_account.json /app/keys/firebase_service_account.json
 
 

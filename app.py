@@ -26,11 +26,13 @@ from google.cloud.firestore_v1 import SERVER_TIMESTAMP
 from firebase_admin import auth as fb_auth
 from google.cloud import firestore
 from firebase_admin.auth import UserNotFoundError  # Added for correct exception handling
+from google.auth import default
 
 # Import enhanced Vertex AI RAG services
 ENHANCED_RAG_AVAILABLE = False
 enhanced_chat_service = None
 enhanced_quiz_service = None
+
 
 try:
     from vertex_ai_rag import EnhancedChatService, EnhancedQuizService
@@ -102,6 +104,8 @@ def initialize_firebase():
         except Exception as e:
             app.logger.error(f"Firebase initialization error: {str(e)}", exc_info=True)
             raise
+    creds, proj = default()
+    app.logger.info(f"✅ Active service account: {creds.service_account_email}")
     return firestore.Client()
 
 

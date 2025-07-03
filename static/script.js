@@ -6,7 +6,6 @@ let path = {
 };
 
 let chatHistory = [];
-
 window.onload = function() {
   const savedBoard = localStorage.getItem('board');
   console.log("Saved board:", savedBoard);
@@ -49,24 +48,36 @@ function selectChapter(selectElement) {
 // }
 
 function getFullPath() {
-
   if (!path.board || !path.class || !path.subject || !path.chapter) {
     console.error("Missing path components:", path);
     throw new Error("Incomplete path configuration");
   }
 
-  const board = path.board; 
-  const classLevel = path.class;
-  const subject = path.subject;
-  const chapter = path.chapter;
+  const board = path.board.trim();
+  const classLevel = path.class.trim();
+  const subject = path.subject.trim();
+  const chapter = path.chapter.trim();
+  const literatureType = path.literatureType?.trim() || ''; // Only needed for English
 
-  // Extract chapter number from selection (e.g., "Chapter 1: Introduction" → "1")
+  // Extract chapter number (e.g., "Chapter 2" → "2")
   const chapterNumber = chapter.match(/\d+/)?.[0] || '1';
-  
-  // Handle different file naming patterns
-  print(`gs://rag-project-storagebucket/${board}/Class ${classLevel}/${subject}/chapter (${chapterNumber}).pdf`);
-  return `gs://rag-project-storagebucket/${board}/Class ${classLevel}/${subject}/chapter (${chapterNumber}).pdf`;
+
+  // Construct chapter file name like "Chapter_2.pdf"
+  const chapterFile = `Chapter_${chapterNumber}.pdf`;
+
+  // Build subject path, e.g. "English/literature"
+  let subjectPath = subject;
+  if (subject.toLowerCase() === 'english' && literatureType) {
+    subjectPath += `/${literatureType.toLowerCase()}`;
+  }
+
+  // Final path
+  const gcsPath = `gs://guru-ai-bucket/${board}/Class ${classLevel}/${subjectPath}/${chapterFile}`;
+
+  console.log("Generated GCS Path:", gcsPath);
+  return gcsPath;
 }
+
 
 function handleQuestion(event) {
   if (event.key === 'Enter' || event.type === 'click') {
@@ -74,38 +85,6 @@ function handleQuestion(event) {
   }
 }
 
-// function askQuestion() {
-//   const input = document.getElementById('userQuestion');
-//   const question = input.value.trim();
-//   if (!question) return;
-
-//   input.value = '';
-//   displayUserMessage(question);
-//   addToChatHistory('user', question);
-
-//   const typingId = showTypingAnimation();
-
-//   const fullPath = getFullPath();
-
-//   fetch('/ask', {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ path: fullPath, question })
-//   })
-//     .then(res => res.json())
-//     .then(data => {
-//       removeTypingAnimation(typingId);
-//       const answer = data.answer || "❌ Sorry, I couldn't find an answer.";
-//       displayBotMessage(answer);
-//       addToChatHistory('bot', answer);
-//       updateSidebarHistory();
-//     })
-//     .catch(err => {
-//       console.error('Error:', err);
-//       removeTypingAnimation(typingId);
-//       displayBotMessage("❌ Something went wrong. Please try again.");
-//     });
-// }
 
 async function askQuestion() {
     if (!path.subject || !path.chapter) {
@@ -224,30 +203,7 @@ function formatPathForDisplay(fullPath) {
   }
 }
 
-// Updated getFullPath() with validation
-// function getFullPath() {
-//   // Validate required fields
-//   const required = ['board', 'class', 'subject', 'chapter'];
-//   const missing = required.filter(field => !path[field]);
-//   if (missing.length) {
-//     throw new Error(`Missing path components: ${missing.join(', ')}`);
-//   }
 
-//   // Extract chapter number (more flexible approach)
-//   let chapterNumber = '1'; // default
-//   const numMatch = path.chapter.match(/(\d+)/);
-//   if (numMatch) chapterNumber = numMatch[1];
-  
-//   // Clean components
-//   const cleanPath = {
-//     board: encodeURIComponent(path.board.replace(/\s+/g, '_')),
-//     class: encodeURIComponent(path.class.replace(/\s+/g, '_')),
-//     subject: encodeURIComponent(path.subject.replace(/\s+/g, '_')),
-//     chapter: chapterNumber
-//   };
-//   console.debug("Clean path:", cleanPath); // Debug log
-//   return `gs://rag-project-storagebucket/${cleanPath.board}/Class_${cleanPath.class}/${cleanPath.subject}/chapter_${cleanPath.chapter}.pdf`;
-// }
 
 function getFullPath() {
   // Validate path object exists
@@ -305,7 +261,7 @@ function getFullPath() {
   }
 
   // Construct final path
-  return `gs://rag-project-storagebucket/${
+  return `gs://guru-ai-bucket/${
     cleanPath.board
   }/Class_${
     cleanPath.class
@@ -701,38 +657,7 @@ function showQuizButton() {
   chatInput.parentNode.insertBefore(quizButton, chatInput);
 }
 
-function startQuiz() {
-  if (!path.chapter) {
-    alert('Please select a chapter first');
-    return;
-  }
 
-  const fullPath = `gs://rag-project-storagebucket/${path.board}/${path.class}/${path.subject}/${path.chapter}`;
-  
-  // Show loading message
-  const loadingId = showTypingAnimation();
-  
-  fetch('/generate-quiz', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ path: fullPath })
-  })
-    .then(res => res.json())
-    .then(data => {
-      removeTypingAnimation(loadingId);
-      if (data.questions && data.questions.length > 0) {
-        quizQuestions = data.questions;
-        displayQuizQuestions();
-      } else {
-        displayBotMessage("❌ Could not generate quiz questions. Please try again.");
-      }
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      removeTypingAnimation(loadingId);
-      displayBotMessage("❌ Something went wrong while generating quiz.");
-    });
-}
 
 function displayQuizQuestions() {
   const chat = document.getElementById('chat');
