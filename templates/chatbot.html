@@ -1,421 +1,1052 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guru AI Chat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guru AI Chat</title>
+  <link rel="icon"  href="../static/icon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      display: flex;
+    }
     
-    <style>
-        body {
-            font-family: 'Nunito Sans', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        
-        .chat-container {
-            max-width: 100%;
-            margin: 0 auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .chat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .chat-title {
-            font-size: 1.5rem;
-            color: #4a1fb8;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logout-btn {
-            background: none;
-            border: none;
-            color: #4a1fb8;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .logout-btn:hover {
-            text-decoration: underline;
-        }
-        
-        .selection-area {
-            background: #f5f7fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .selection-options {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        
-        select, button {
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-        }
-        
-        button {
-            background: #4a1fb8;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        button:hover {
-            background: #3a1a9a;
-        }
-        
-        button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        #chatArea {
-            margin-top: 20px;
-            max-height: 500px;
-            overflow-y: auto;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .message {
-            margin-bottom: 15px;
-            display: flex;
-        }
-        
-        .message.bot {
-            justify-content: flex-start;
-        }
-        
-        .message.user {
-            justify-content: flex-end;
-        }
-        
-        .bubble {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            line-height: 1.4;
-        }
-        
-        .bubble.bot {
-          padding: 12px 16px;
-          margin: 8px 0;
-          background-color: #f5f5f5;
-          border-radius: 12px;
-          max-width: 90%;
-          white-space: normal;
-          line-height: 1.6;
-          font-size: 15px;
-          overflow-x: auto;
-          word-break: break-word;
-        }
+    /* Sidebar styles */
+    .sidebar {
+      width: 280px;
+      background: white;
+      padding: 20px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      height: 100vh;
+      overflow-y: auto;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 25px;
+    }
+    
+    .sidebar-title {
+      font-size: 1.1rem;
+      color: #4a1fb8;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .dropdown {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    
+    .dropdown label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #555;
+    }
+    
+    .dropdown select {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      background-color: #fff;
+      transition: border 0.3s;
+    }
+    
+    .dropdown select:focus {
+      outline: none;
+      border-color: #4a1fb8;
+    }
+    
+    /* Main content styles */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      height: 100vh;
+    }
+    
+    .chat-container {
+      max-width: 100%;
+      margin: 0 auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .chat-title {
+      font-size: 1.5rem;
+      color: #4a1fb8;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #4a1fb8;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    
+    .logout-btn:hover {
+      text-decoration: underline;
+    }
+    
+    .selection-area {
+      background: #f5f7fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .selection-options {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    
+    select, button {
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+    
+    button {
+      background: #4a1fb8;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    button:hover {
+      background: #3a1a9a;
+    }
+    
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    #chatArea {
+      margin-top: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      display: flex;
+    }
+    
+    .message.bot {
+      justify-content: flex-start;
+    }
+    
+    .message.user {
+      justify-content: flex-end;
+    }
+    
+    .bubble {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      line-height: 1.4;
+    }
+    
+    .bubble.bot {
+      padding: 12px 16px;
+      margin: 8px 0;
+      background-color: #f5f5f5;
+      border-radius: 12px;
+      max-width: 90%;
+      white-space: normal;
+      line-height: 1.6;
+      font-size: 15px;
+      overflow-x: auto;
+      word-break: break-word;
+    }
 
-        .bubble.bot p {
-          margin: 10px 0;
-        }
-        
-        .bubble.bot table {
-          margin-top: 10px;
-          margin-bottom: 10px;
-        }
+    .bubble.bot p {
+      margin: 10px 0;
+    }
+    
+    .bubble.bot table {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
 
-        .bubble.user {
-            background-color: #4a1fb8;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-        
-        .chat-input {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .chat-input input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 24px;
-            font-size: 16px;
-        }
-        
-        .chat-input button {
-            padding: 12px 20px;
-            border-radius: 24px;
-        }
-        
-        /* Processing message styles */
-        .message.processing {
-            opacity: 0.8;
-        }
-        
-        .processing-message {
-            display: flex;
-            align-items: center;
-        }
-        
-        .processing-dots {
-            display: inline-flex;
-            margin-left: 5px;
-        }
-        
-        .processing-dots .dot {
-            animation: bounce 1.5s infinite ease-in-out;
-            animation-delay: calc(var(--dot-index) * 0.2s);
-        }
-        
-        .processing-dots .dot:nth-child(1) { --dot-index: 1; }
-        .processing-dots .dot:nth-child(2) { --dot-index: 2; }
-        .processing-dots .dot:nth-child(3) { --dot-index: 3; }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-        
-        /* Error message styles */
-        .message.error .bubble {
-            background-color: #ffebee;
-            border: 1px solid #ffcdd2;
-            color: #c62828;
-        }
-        
-        /* Debug info styles */
-        .debug-info {
-            background-color: #f8f9fa;
-            border-left: 4px solid #6c757d;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        .debug-toggle {
-            color: #007bff;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .debug-toggle:hover {
-            text-decoration: underline;
-        }
-        
-        .debug-content.hidden {
-            display: none;
-        }
-        
-        .debug-content {
-            background-color: white;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            padding: 10px;
-            margin-top: 5px;
-        }
-        
-        /* Table styling */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 0.5em 0;
-        }
-        
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px 12px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .selection-options {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            select, button {
-                width: 100%;
-            }
-        }
-         /* Add this new style for the literature dropdown */
-        .literature-select {
-            margin-top: 10px;
-            display: none;
-        }
+    .bubble.user {
+      background-color: #4a1fb8;
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .chat-input {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .chat-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 24px;
+      font-size: 16px;
+    }
+    
+    .chat-input button {
+      padding: 12px 20px;
+      border-radius: 24px;
+    }
+    
+    /* Processing message styles */
+    .message.processing {
+      opacity: 0.8;
+    }
+    
+    .processing-message {
+      display: flex;
+      align-items: center;
+    }
+    
+    .processing-dots {
+      display: inline-flex;
+      margin-left: 5px;
+    }
+    
+    .processing-dots .dot {
+      animation: bounce 1.5s infinite ease-in-out;
+      animation-delay: calc(var(--dot-index) * 0.2s);
+    }
+    
+    .processing-dots .dot:nth-child(1) { --dot-index: 1; }
+    .processing-dots .dot:nth-child(2) { --dot-index: 2; }
+    .processing-dots .dot:nth-child(3) { --dot-index: 3; }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    
+    /* Error message styles */
+    .message.error .bubble {
+      background-color: #ffebee;
+      border: 1px solid #ffcdd2;
+      color: #c62828;
+    }
+    
+    /* Debug info styles */
+    .debug-info {
+      background-color: #f8f9fa;
+      border-left: 4px solid #6c757d;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    
+    .debug-toggle {
+      color: #007bff;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .debug-toggle:hover {
+      text-decoration: underline;
+    }
+    
+    .debug-content.hidden {
+      display: none;
+    }
+    
+    .debug-content {
+      background-color: white;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 5px;
+    }
+    
+    /* Table styling */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.5em 0;
+    }
+    
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    /* Add this new style for the literature dropdown */
+    .literature-select {
+      margin-top: 10px;
+      display: none;
+    }
 
+    /* Current selection styles */
+    .current-selection {
+      background: #f0f2f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .current-selection h3 {
+      margin-top: 0;
+      color: #4a1fb8;
+    }
+    
+    .selection-item {
+      margin-bottom: 8px;
+    }
+    
+    .selection-label {
+      font-weight: 600;
+      color: #555;
+    }
+    
+    .selection-value {
+      color: #333;
+    }
 
+    /* Responsive design */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 15px;
+      }
+      
+      .main-content {
+        padding: 15px;
+      }
+      
+      .selection-options {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      select, button {
+        width: 100%;
+      }
+      .bubble.bot h1, .bubble.bot h2, .bubble.bot h3 {
+  margin: 10px 0 5px;
+  color: #2a2a2a;
+}
 
-    </style>
+.bubble.bot ul {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.bubble.bot table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.bubble.bot th, .bubble.bot td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.bubble.bot th {
+  background-color: #f4f4f4;
+}
+
+    }
+  </style>
+
 </head>
-
 <body>
-  <div class="chat-container">
-    <header class="chat-header">
-      <h1 class="chat-title">Guru AI Chat</h1>
-      <div class="user-info">
-        <span>Board: <strong id="displayBoard">Loading...</strong></span>
-        <span>Class: <strong id="displayClass">Loading...</strong></span>
-        <button id="editSettings" style="margin-left: 10px; background: none; border: none; color: #4a1fb8; cursor: pointer;">✏️ Edit</button>  
-        <!-- Show edit button only for admin -->
-        <span>User: <strong id="user-name">Guest</strong></span>
-      </div>
-      <button onclick="window.location.href='/index.html'" style="margin-left: 15px;">← Back to Dashboard</button>
-    </header>
-
-    <div class="selection-area">
-      <h2>Select Study Material</h2>
-      <div class="selection-options">
-        <select id="subjectSelect">
-          <option value="" disabled selected>Select Subject</option>
+  <!-- Sidebar with dropdowns -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <h2 class="sidebar-title">Study Material</h2>
+      
+      <div class="dropdown">
+        <label for="sidebarBoard">Board</label>
+        <select id="sidebarBoard">
+          <option value="">Select Board</option>
+          <option value="NCERT">NCERT</option>
         </select>
-
-        <select id="literatureType" class="literature-select">
-          <option value="" disabled selected>Select Sub-Subject</option>
+      </div>
+      
+      <div class="dropdown">
+        <label for="sidebarClass">Class</label>
+        <select id="sidebarClass">
+          <option value="">Select Class</option>
+          <option value="6">Class 6</option>
+          <option value="7">Class 7</option>
+          <option value="8">Class 8</option>
+          <option value="9">Class 9</option>
+          <option value="10">Class 10</option>
+          <option value="11">Class 11</option>
+          <option value="12">Class 12</option>
+        </select>
+      </div>
+      
+      <div class="dropdown">
+        <label for="sidebarStream">Stream (11-12 only)</label>
+        <select id="sidebarStream" disabled>
+          <option value="">Select Stream</option>
+          <option value="Science">Science</option>
+          <option value="Commerce">Commerce</option>
+          <option value="Arts">Arts</option>
+        </select>
+      </div>
+      
+      <div class="dropdown">
+        <label for="sidebarSubject">Subject</label>
+        <select id="sidebarSubject" disabled>
+          <option value="">Select Subject</option>
+        </select>
+      </div>
+      
+      <div class="dropdown">
+        <label for="sidebarLiterature">Literature Type (English only)</label>
+        <select id="sidebarLiterature" class="literature-select" disabled>
+          <option value="">Select Type</option>
           <option value="literature">Literature</option>
           <option value="supplementary">Supplementary</option>
         </select>
-
-        <select id="chapterSelect">
-          <option value="" disabled selected>Select Chapter</option>
+      </div>
+      
+      <div class="dropdown">
+        <label for="sidebarChapter">Chapter</label>
+        <select id="sidebarChapter" disabled>
+          <option value="">Select Chapter</option>
         </select>
-        
       </div>
-      <button id="submitButton">Load Material</button>
+      
+      <button id="sidebarSubmit" class="sidebar-submit" disabled>Load Material</button>
     </div>
-
-    <div id="history-container"></div>
-
-    <div id="chatArea">
-      <div class="message bot">
-        <div class="bubble bot">Hi! 👋 I'm your Guru AI.</div>
+    
+    <div class="sidebar-section">
+      <h2 class="sidebar-title">Current Selection</h2>
+      <div class="current-selection">
+        <div class="selection-item">
+          <span class="selection-label">Board:</span>
+          <span class="selection-value" id="currentBoard">Not selected</span>
+        </div>
+        <div class="selection-item">
+          <span class="selection-label">Class:</span>
+          <span class="selection-value" id="currentClass">Not selected</span>
+        </div>
+        <div class="selection-item">
+          <span class="selection-label">Stream:</span>
+          <span class="selection-value" id="currentStream">Not applicable</span>
+        </div>
+        <div class="selection-item">
+          <span class="selection-label">Subject:</span>
+          <span class="selection-value" id="currentSubject">Not selected</span>
+        </div>
+        <div class="selection-item">
+          <span class="selection-label">Chapter:</span>
+          <span class="selection-value" id="currentChapter">Not selected</span>
+        </div>
       </div>
-    </div>
-
-    <div class="chat-input">
-      <input type="text" id="userQuestion" placeholder="Ask your question..." disabled />
-      <button id="sendButton">Send</button>
     </div>
   </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    const board = localStorage.getItem('board');
-    const classLevel = localStorage.getItem('class');
-    const stream = localStorage.getItem('stream') || 'NA';
+  <!-- Main content area -->
+  <div class="main-content">
+    <div class="chat-container">
+      <header class="chat-header">
+        <h1 class="chat-title">Guru AI Chat</h1>
+        <div class="user-info">
+          <span id="user-name">Guest</span>
+          <button onclick="window.location.href='/index.html'" style="margin-left: 15px;">← Back to Dashboard</button>
+        </div>
+      </header>
 
-    console.log('[DEBUG] Loaded from localStorage → board:', board, ', class:', classLevel, ', stream:', stream);
+      <div id="chatArea">
+        <div class="message bot">
+          <div class="bubble bot">Hi! 👋 I'm your Guru AI. Please select your study material from the sidebar to get started.</div>
+        </div>
+      </div>
 
-    document.getElementById('displayBoard').textContent = board;
-    document.getElementById('displayClass').textContent = `Class ${classLevel}`;
+      <div class="chat-input">
+        <input type="text" id="userQuestion" placeholder="Ask your question..." disabled />
+        <button id="sendButton">Send</button>
+      </div>
+    </div>
+  </div>
 
-    const subjectSelect = document.getElementById('subjectSelect');
-    const chapterSelect = document.getElementById('chapterSelect');
-    const literatureSelect = document.getElementById('literatureType');
+  <script>
+    let chapterTitleMap = {};
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Get all sidebar dropdown elements
+      const sidebarBoard = document.getElementById('sidebarBoard');
+      const sidebarClass = document.getElementById('sidebarClass');
+      const sidebarStream = document.getElementById('sidebarStream');
+      const sidebarSubject = document.getElementById('sidebarSubject');
+      const sidebarLiterature = document.getElementById('sidebarLiterature');
+      const sidebarChapter = document.getElementById('sidebarChapter');
+      const sidebarSubmit = document.getElementById('sidebarSubmit');
+      
+      // Current selection display elements
+      const currentBoard = document.getElementById('currentBoard');
+      const currentClass = document.getElementById('currentClass');
+      const currentStream = document.getElementById('currentStream');
+      const currentSubject = document.getElementById('currentSubject');
+      const currentChapter = document.getElementById('currentChapter');
+      
+      // Load saved selections from localStorage
+    //   const savedBoard = localStorage.getItem('board') || '';
+    //   const savedClass = localStorage.getItem('class') || '';
+    //   const savedStream = localStorage.getItem('stream') || '';
+      
+    //   if (savedBoard) {
+    //     sidebarBoard.value = savedBoard;
+    //     currentBoard.textContent = savedBoard;
+    //   }
+      
+    //   if (savedClass) {
+    //     sidebarClass.value = savedClass;
+    //     currentClass.textContent = `Class ${savedClass}`;
+        
+    //     // Enable stream dropdown for classes 11-12
+    //     if (parseInt(savedClass) >= 11) {
+    //       sidebarStream.disabled = false;
+    //       if (savedStream) {
+    //         sidebarStream.value = savedStream;
+    //         currentStream.textContent = savedStream;
+    //       }
+    //     }
+    //   }
+      
+      // Board selection handler
+      sidebarBoard.addEventListener('change', () => {
+        const board = sidebarBoard.value;
+        // localStorage.setItem('board', board);
+        currentBoard.textContent = board || 'Not selected';
+        
+        // Reset dependent fields
+        if (!board) {
+          sidebarClass.value = '';
+          sidebarStream.value = '';
+          sidebarSubject.value = '';
+          sidebarChapter.value = '';
+          
+          sidebarClass.disabled = true;
+          sidebarStream.disabled = true;
+          sidebarSubject.disabled = true;
+          sidebarChapter.disabled = true;
+          sidebarSubmit.disabled = true;
+          
+          currentClass.textContent = 'Not selected';
+          currentStream.textContent = 'Not applicable';
+          currentSubject.textContent = 'Not selected';
+          currentChapter.textContent = 'Not selected';
+        } else {
+          sidebarClass.disabled = false;
+        }
+      });
+      
+      // Class selection handler
+      sidebarClass.addEventListener('change', () => {
+        const classLevel = sidebarClass.value;
+        // localStorage.setItem('class', classLevel);
+        currentClass.textContent = classLevel ? `Class ${classLevel}` : 'Not selected';
+        
+        if (classLevel) {
+          // Enable/disable stream based on class
+          if (parseInt(classLevel) >= 11) {
+            sidebarStream.disabled = false;
+            currentStream.textContent = sidebarStream.value || 'Not selected';
+          } else {
+            sidebarStream.disabled = true;
+            sidebarStream.value = '';
+            currentStream.textContent = 'Not applicable';
+            localStorage.removeItem('stream');
+          }
+          
+          // Load subjects for this class
+          loadSubjects(classLevel, sidebarStream.value);
+        } else {
+          // Reset dependent fields
+          sidebarStream.value = '';
+          sidebarSubject.value = '';
+          sidebarChapter.value = '';
+          
+          sidebarStream.disabled = true;
+          sidebarSubject.disabled = true;
+          sidebarChapter.disabled = true;
+          sidebarSubmit.disabled = true;
+          
+          currentStream.textContent = 'Not applicable';
+          currentSubject.textContent = 'Not selected';
+          currentChapter.textContent = 'Not selected';
+        }
+      });
+      
+      // Stream selection handler (for classes 11-12)
+      sidebarStream.addEventListener('change', () => {
+        const stream = sidebarStream.value;
+        // localStorage.setItem('stream', stream);
+        currentStream.textContent = stream || 'Not selected';
+        
+        if (stream && sidebarClass.value) {
+          loadSubjects(sidebarClass.value, stream);
+        } else {
+          sidebarSubject.value = '';
+          sidebarChapter.value = '';
+          
+          sidebarSubject.disabled = true;
+          sidebarChapter.disabled = true;
+          sidebarSubmit.disabled = true;
+          
+          currentSubject.textContent = 'Not selected';
+          currentChapter.textContent = 'Not selected';
+        }
+      });
+      
 
-    try {
-      console.log('[DEBUG] Fetching subjects...');
-      const subjectsRes = await fetch(`/api/getout-subjects?class=${classLevel}&stream=${stream}`);
-     console.log('[DEBUG] Response status:', subjectsRes.status);
-      const subjects = await subjectsRes.json();
-      console.log('[DEBUG] Subjects fetched:', subjects);
+    // Subject selection handler
+    sidebarSubject.addEventListener('change', () => {
+    const subject = sidebarSubject.value;
+    currentSubject.textContent = subject || 'Not selected';
 
-      subjectSelect.innerHTML = `
-        <option value="" disabled selected>Select Subject</option>
-        ${Array.isArray(subjects) ? subjects.map(subj => `<option value="${subj}">${subj}</option>`).join('') : ''}
-      `;
-    } catch (err) {
-      console.error('[ERROR] Failed to load subjects:', err);
-      alert('Failed to load subjects');
+    const isEnglish = subject.toLowerCase() === 'english';
+    const classLevel = parseInt(sidebarClass.value);
+
+    const shouldShowLiterature = isEnglish && classLevel >= 8 && classLevel <= 12 && classLevel !== 11;
+
+    const literatureContainer = document.querySelector('.literature-select');
+
+    if (shouldShowLiterature) {
+        sidebarLiterature.disabled = false;
+        literatureContainer.style.display = 'block';
+    } else {
+        sidebarLiterature.disabled = true;
+        sidebarLiterature.value = '';
+        literatureContainer.style.display = 'none';
     }
 
-    subjectSelect.addEventListener('change', async () => {
-      const subject = subjectSelect.value;
-      console.log('[DEBUG] Subject selected:', subject);
-
-      literatureSelect.style.display = subject.toLowerCase() === 'english' ? 'block' : 'none';
-      const literatureType = subject.toLowerCase() === 'english' ? literatureSelect.value : '';
-
-      console.log('[DEBUG] Literature type (on subject change):', literatureType);
-
-      await loadChapters(subject, literatureType);
+    // Load chapters for this subject
+    if (subject) {
+        loadChapters(subject, sidebarLiterature.value);
+    } else {
+        sidebarChapter.value = '';
+        sidebarChapter.disabled = true;
+        sidebarSubmit.disabled = true;
+        currentChapter.textContent = 'Not selected';
+    }
     });
+    
+       // Literature type selection handler (for English)
+       sidebarLiterature.addEventListener('change', () => {
+         if (sidebarSubject.value) {
+           loadChapters(sidebarSubject.value, sidebarLiterature.value);
+         }
+       });
+      
+      // Chapter selection handler
+      sidebarChapter.addEventListener('change', () => {
+        const selectedKey = sidebarChapter.value;
+        currentChapter.textContent = chapterTitleMap[selectedKey] || 'Not selected';
 
-    literatureSelect.addEventListener('change', async () => {
-      const subject = subjectSelect.value;
-      const literatureType = literatureSelect.value;
-      console.log('[DEBUG] Literature type changed to:', literatureType, ', for subject:', subject);
-
-      if (subject.toLowerCase() === 'english') {
-        await loadChapters(subject, literatureType);
-      }
-    });
-
-    async function loadChapters(subject, literatureType = '') {
-      chapterSelect.disabled = true;
-      chapterSelect.innerHTML = '<option value="" disabled selected>Loading chapters...</option>';
-      console.log('[DEBUG] Fetching chapters with:', {
-        classLevel,
-        subject,
-        literatureType
+        sidebarSubmit.disabled = !sidebarChapter.value;
       });
-
-      try {
-        const chapterRes = await fetch(`/api/getout-chapters?class=${classLevel}&subject=${subject}&literature=${literatureType}`);
-        const chapters = await chapterRes.json();
-        console.log('[DEBUG] Chapters fetched:', chapters);
-
-        chapterSelect.innerHTML = `
-          <option value="" disabled selected>Select Chapter</option>
-          ${Array.isArray(chapters) ? chapters.map(chap => `<option value="${chap}">${chap}</option>`).join('') : ''}
-        `;
-        chapterSelect.disabled = false;
-      } catch (err) {
-        console.error('[ERROR] Failed to load chapters:', err);
-        chapterSelect.innerHTML = '<option value="" disabled selected>Failed to load chapters</option>';
+      
+      // Submit button handler
+      sidebarSubmit.addEventListener('click', submitPath);
+      
+      // Function to load subjects
+      async function loadSubjects(classLevel, stream = '') {
+        sidebarSubject.disabled = true;
+        sidebarSubject.innerHTML = '<option value="">Loading subjects...</option>';
+        
+        try {
+          const response = await fetch(`/api/getout-subjects?class=${classLevel}&stream=${stream}`);
+          const subjects = await response.json();
+          
+          sidebarSubject.innerHTML = '<option value="">Select Subject</option>';
+          if (Array.isArray(subjects)) {
+            subjects.forEach(subject => {
+              sidebarSubject.innerHTML += `<option value="${subject}">${subject}</option>`;
+            });
+          }
+          
+          sidebarSubject.disabled = false;
+          currentSubject.textContent = 'Not selected';
+        } catch (error) {
+          console.error('Failed to load subjects:', error);
+          sidebarSubject.innerHTML = '<option value="">Failed to load subjects</option>';
+        }
+        
+        // Reset dependent fields
+        sidebarLiterature.value = '';
+        sidebarChapter.value = '';
+        
+        sidebarLiterature.disabled = true;
+        sidebarChapter.disabled = true;
+        sidebarSubmit.disabled = true;
+        
+        currentChapter.textContent = 'Not selected';
       }
+      
+      function populateEnglishLiteratureOptions() {
+  sidebarLiterature.innerHTML = `
+    <option value="">Select Type</option>
+    <option value="Literature">Literature</option>
+    <option value="Supplementary">Supplementary</option>
+  `;
+}
+
+      // Function to load chapters
+      // async function loadChapters(subject, literatureType = '') {
+      //   sidebarChapter.disabled = true;
+      //   sidebarChapter.innerHTML = '<option value="">Loading chapters...</option>';
+        
+      //   const classLevel = sidebarClass.value;
+        
+      //   try {
+      //     const response = await fetch(`/api/getout-chapters?class=${classLevel}&subject=${subject}&literature=${literatureType}`);
+      //     const chapters = await response.json();
+          
+      //     sidebarChapter.innerHTML = '<option value="">Select Chapter</option>';
+      //     if (Array.isArray(chapters)) {
+      //       chapters.forEach(chapter => {
+      //         sidebarChapter.innerHTML += `<option value="${chapter}">${chapter}</option>`;
+      //       });
+      //     }
+          
+      //     sidebarChapter.disabled = false;
+      //     currentChapter.textContent = 'Not selected';
+      //   } catch (error) {
+      //     console.error('Failed to load chapters:', error);
+      //     sidebarChapter.innerHTML = '<option value="">Failed to load chapters</option>';
+      //   }
+        
+      //   sidebarSubmit.disabled = true;
+      // }
+      
+      async function loadChapters(subject, literatureType = '') {
+  sidebarChapter.disabled = true;
+  sidebarChapter.innerHTML = '<option value="">Loading chapters...</option>';
+
+  const classLevel = sidebarClass.value;
+  const board = sidebarBoard.value;
+
+  try {
+    // Fetch chapter numbers (e.g., "Chapter 1", "Chapter 2", ...)
+    const response = await fetch(`/api/getout-chapters?class=${classLevel}&subject=${subject}&literature=${literatureType}`);
+    const chapters = await response.json();
+
+    // Fetch chapter mapping
+    const mapRes = await fetch('/api/chatbot/chapter-mapping');
+    const chapterMap = await mapRes.json();
+
+    // Determine correct section
+    const boardData = chapterMap?.[board]?.[`Class ${classLevel}`];
+    let subjectChapters;
+
+    if (subject.toLowerCase() === 'english' && literatureType) {
+      subjectChapters = boardData?.[subject]?.[literatureType.toLowerCase()];
+    } else {
+      subjectChapters = boardData?.[subject];
+    }
+
+    sidebarChapter.innerHTML = '<option value="">Select Chapter</option>';
+    chapterTitleMap = {}; // reset
+
+    if (Array.isArray(chapters)) {
+      chapters.forEach(chapter => {
+        const title = subjectChapters?.[chapter] || chapter;
+        chapterTitleMap[chapter] = title;
+
+        sidebarChapter.innerHTML += `<option value="${chapter}">${title}</option>`;
+      });
+    }
+
+    sidebarChapter.disabled = false;
+    currentChapter.textContent = 'Not selected';
+  } catch (error) {
+    console.error('Failed to load chapters:', error);
+    sidebarChapter.innerHTML = '<option value="">Failed to load chapters</option>';
+  }
+
+  sidebarSubmit.disabled = true;
+}
+
+      // Function to submit the selected path
+async function submitPath() {
+  const board = sidebarBoard.value;
+  const classLevel = sidebarClass.value;
+  const subject = sidebarSubject.value;
+  const chapter = sidebarChapter.value;
+  const literature = sidebarLiterature.value;
+
+  if (!board || !classLevel || !subject || !chapter) {
+    alert('Please complete all selections');
+    return;
+  }
+
+  try {
+    sidebarSubmit.disabled = true;
+
+    let path = `gs://guru-ai-bucket/${board}/Class ${classLevel}/${subject}`;
+    
+    if (
+      subject.toLowerCase() === 'english' &&
+      literature &&
+      literature.trim() !== ''
+    ) {
+      path += `/${literature.toLowerCase()}`;
+    }
+
+    path += `/${chapter.replace(/ /g, '_').replace(/[()]/g, '')}.pdf`;
+
+    console.log('Final GCS path:', path); // Debug log
+
+    window.selectedMaterialPath = path;
+
+    const response = await fetch('/api/chatbot/submit-path', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path }),
+    });
+
+    if (!response.ok) throw new Error('Failed to load material');
+
+    document.getElementById('userQuestion').disabled = false;
+
+    const chatArea = document.getElementById('chatArea');
+    const successMsg = document.createElement('div');
+    successMsg.className = 'message bot';
+    successMsg.innerHTML = `
+      <div class="bubble bot">
+        ✅ Material loaded successfully! You can now ask questions about:<br><br>
+        <strong>${subject}</strong> - ${chapter}
+      </div>
+    `;
+    chatArea.appendChild(successMsg);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  } catch (error) {
+    console.error('Error:', error);
+    alert(error.message || 'Something went wrong');
+  } finally {
+    sidebarSubmit.disabled = false;
+  }
+}
+
+      // Initialize the form based on saved values
+    //   if (savedBoard) sidebarBoard.dispatchEvent(new Event('change'));
+    //   if (savedClass) sidebarClass.dispatchEvent(new Event('change'));
+    //   if (savedStream) sidebarStream.dispatchEvent(new Event('change'));
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+  const sendButton = document.getElementById('sendButton');
+  const userInput = document.getElementById('userQuestion');
+  const chatArea = document.getElementById('chatArea');
+
+  // Add a user message to chat
+  function addUserMessage(message) {
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.innerHTML = `<div class="bubble user">${message}</div>`;
+    chatArea.appendChild(userMsg);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  // Add a bot message to chat
+  function addBotMessage(message, isHtml = false) {
+    const botMsg = document.createElement('div');
+    botMsg.className = 'message bot';
+    const content = isHtml ? formatText(message) : escapeHtml(message);
+    botMsg.innerHTML = `<div class="bubble bot">${content}</div>`;
+    chatArea.appendChild(botMsg);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  // Show processing animation
+  function showProcessingMessage() {
+    const processingMsg = document.createElement('div');
+    processingMsg.className = 'message bot processing';
+    processingMsg.id = 'processingMessage';
+    processingMsg.innerHTML = `
+      <div class="bubble bot processing-message">
+        Thinking
+        <span class="processing-dots">
+          <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+        </span>
+      </div>
+    `;
+    chatArea.appendChild(processingMsg);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  // Remove processing animation
+  function removeProcessingMessage() {
+    const processingMsg = document.getElementById('processingMessage');
+    if (processingMsg) {
+      processingMsg.remove();
+    }
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+function formatText(rawText) {
+  if (!rawText) return '';
+
+  // Sanitize angle brackets
+  let formatted = rawText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // Restore allowed tags
+  formatted = formatted
+    .replace(/&lt;(\/?sup)&gt;/g, '<$1>') // Allow <sup> and </sup>
+    .replace(/&lt;(\/?sub)&gt;/g, '<$1>');
+
+  // Headings
+  formatted = formatted.replace(/^###### (.*)$/gm, '<h6>$1</h6>');
+  formatted = formatted.replace(/^##### (.*)$/gm, '<h5>$1</h5>');
+  formatted = formatted.replace(/^#### (.*)$/gm, '<h4>$1</h4>');
+  formatted = formatted.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+  formatted = formatted.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+  formatted = formatted.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+
+  // Bold and Italics
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+  // Lists
+  formatted = formatted.replace(/^\* (.*)$/gm, '<li>$1</li>');
+  formatted = formatted.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+
+  // Fix spacing between blocks
+  formatted = formatted.replace(/\n{2,}/g, '');
+
+  // Tables (markdown style |...|)
+  const tableRegex = /((?:\|.*\|(?:\r?\n)?)+)/g;
+  formatted = formatted.replace(tableRegex, match => {
+    const lines = match.trim().split('\n');
+    if (lines.length < 2) return match;
+
+    const headers = lines[0].split('|').slice(1, -1).map(h => `<th>${h.trim()}</th>`).join('');
+    const rows = lines.slice(2).map(row => {
+      const cells = row.split('|').slice(1, -1).map(cell => `<td>${cell.trim()}</td>`).join('');
+      return `<tr>${cells}</tr>`;
+    }).join('');
+
+    return `<table><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
+  });
+
+  return formatted;
+}
+
+
+  // Send user message to the chatbot backend
+async function sendMessage() {
+  const message = userInput.value.trim();
+  if (!message) return;
+
+  addUserMessage(message);
+  userInput.value = '';
+  userInput.disabled = true;
+  sendButton.disabled = true;
+
+  showProcessingMessage();
+
+  const path = window.selectedMaterialPath || null;
+  if (!path) {
+      removeProcessingMessage();
+      addBotMessage('❌ Please load study material before asking a question.');
+      userInput.disabled = false;
+      sendButton.disabled = false;
+      return;
+  }
+
+  try {
+    const response = await fetch('/api/chatbot/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path, question: message }) // ✅ Fixed here
+    });
+
+    if (!response.ok) throw new Error('Server Error');
+
+    const data = await response.json();
+    removeProcessingMessage();
+    addBotMessage(data.answer || 'No response received', true);
+  } catch (err) {
+    console.error(err);
+    removeProcessingMessage();
+    addBotMessage('❌ Failed to get a response. Please try again later.');
+  } finally {
+    userInput.disabled = false;
+    sendButton.disabled = false;
+    userInput.focus();
+  }
+}
+
+  // Event listener for send button
+  sendButton.addEventListener('click', sendMessage);
+
+  // Allow sending message with Enter key
+  userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage();
     }
   });
-</script>
+});
 
-  
-  <script src="../static/chatbot/chatbot.js"></script>
-  <script src="../static/chatbot/chatbot1.js"></script>
-  
+  </script>
 </body>
-
 </html>

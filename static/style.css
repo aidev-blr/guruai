@@ -674,3 +674,45 @@ th {
 
 /* code over by sandyy ... */
 
+.chemical-formula {
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    color: #2c3e50;
+}
+
+.reaction-arrow {
+    padding: 0 0.5em;
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+.state-symbol {
+    font-size: 0.8em;
+    vertical-align: baseline;
+    color: #7f8c8d;
+}
+
+.reaction-type {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 1em 0;
+}
+
+.chat-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.chat-table th, .chat-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.chat-table th {
+    background-color: #f2f2f2;
+}

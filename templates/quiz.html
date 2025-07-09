@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Take Quiz | Guru AI</title>
+    <link rel="icon"  href="../static/icon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -237,6 +238,7 @@
     </style>
 
 </head>
+
 <body>
     <div class="quiz-container">
         <button onclick="window.location.href='/dashboard.html'" style="margin-bottom: 20px;">
@@ -257,11 +259,12 @@
                     <!-- Loaded dynamically -->
                 </select>
 
-                <select id="literatureType" class="literature-select">
-                    <option value="" disabled selected>Select Sub-Subject</option>
+                <select id="literatureType" name="literatureType" style="display:none">
+                    <option value="" disabled selected>Select Literature Type</option>
                     <option value="literature">Literature</option>
                     <option value="supplementary">Supplementary</option>
                 </select>
+
 
                 <select id="quizChapter">
                     <option value="" disabled selected>Select Chapter</option>
@@ -298,126 +301,159 @@
     </div>
 
     <script>
+
+        const path = 
+        {
+            board: localStorage.getItem('board') || '',
+            class: localStorage.getItem('class') || '',
+            subject: '',
+            chapter: '',
+            literatureType: ''
+        };
+
     
-        let currentQuiz = { questions: [], correctAnswers: [] };
+let currentQuiz = { questions: [], correctAnswers: [] };
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            const board = localStorage.getItem('board') ;
-            const classLevel = localStorage.getItem('class');
+    document.addEventListener('DOMContentLoaded', async () => {
+       const userRes = await fetch('/api/user');
+    const userData = await userRes.json();
+    const board = userData.user.board || localStorage.getItem('board');
+    const classLevel = userData.user.class || localStorage.getItem('class');
+    const stream = userData.user.stream || 'NA';
 
-            // ✅ Display loaded values
-            document.getElementById('displayBoard').textContent = board;
-            document.getElementById('displayClass').textContent = classLevel;
-
-            const userRes = await fetch('/api/user');
-            const userData = await userRes.json();
-            const stream = userData.user.stream || 'NA';
-
-            const subjectsRes = await fetch(`/api/get-subjects?class=${classLevel}&stream=${stream}`);
-            const subjects = await subjectsRes.json();
-            const subjectSelect = document.getElementById('quizSubject');
-
-            subjectSelect.innerHTML = `
-                <option value="" disabled selected>Select Subject</option>
-                ${subjects.map(subj => `<option value="${subj}">${subj}</option>`).join('')}
-            `;
-
-            subjectSelect.addEventListener('change', async function () {
-                const subject = this.value;
-                const chapterSelect = document.getElementById('quizChapter');
-                const literatureSelect = document.getElementById('literatureType');
-                // const socialSelect = document.getElementById('socialType');
-
-                if (subject.toLowerCase() === 'english') {
-                    literatureSelect.style.display = 'block';
-                }
-                                
-                else {
-                    literatureSelect.style.display = 'none';
-                }
- 
-                // if (subject.toLowerCase() === 'social') {
-                //     socialSelect.style.display = 'block';
-                // }
-                
-                // else {
-                //     socialSelect.style.display = 'none';
-                // }
-                
-
-                chapterSelect.disabled = true;
-                chapterSelect.innerHTML = '<option value="" disabled selected>Loading chapters...</option>';
-
-                const chaptersRes = await fetch(`/api/get-chapters?subject=${subject}`);
-                const chapters = await chaptersRes.json();
-
-                chapterSelect.innerHTML = `
-                    <option value="" disabled selected>Select Chapter</option>
-                    ${chapters.map(chap => `<option value="${chap}">${chap}</option>`).join('')}
-                `;
-                chapterSelect.disabled = false;
-            });
-        });
+        // Display loaded values (assuming you have these elements)
+        document.getElementById('displayBoard').textContent = board;
+        document.getElementById('displayClass').textContent = classLevel;
         
-        async function startQuiz() {
+        // Fetch subjects
+        const subjectsRes = await fetch(`/api/get-subjects?class=${classLevel}&stream=${stream}`);
+        const subjects = await subjectsRes.json();
+        const subjectSelect = document.getElementById('quizSubject');
+
+        subjectSelect.innerHTML = `
+            <option value="" disabled selected>Select Subject</option>
+            ${subjects.map(subj => `<option value="${subj}">${subj}</option>`).join('')}
+        `;
+
+subjectSelect.addEventListener('change', async function () {
+    const subject = this.value;
+    const chapterSelect = document.getElementById('quizChapter');
+    const literatureSelect = document.getElementById('literatureType');
+
+    chapterSelect.disabled = true;
+    chapterSelect.innerHTML = '<option value="" disabled selected>Loading chapters...</option>';
+
+    if (subject.toLowerCase() === 'english' && classLevel >= 8 && classLevel != 11) {
+        literatureSelect.style.display = 'block';
+
+        // Wait for user to select a literature type before fetching chapters
+        literatureSelect.addEventListener('change', async function () {
             const subject = document.getElementById('quizSubject').value;
-            const chapter = document.getElementById('quizChapter').value;
-            const difficulty = document.getElementById('quizDifficulty').value;
-            const literatureType = document.getElementById('literatureType').value;
-            
-            if (!subject || !chapter) {
-                alert('Please select both subject and chapter');
+            const litType = this.value;
+
+            const chaptersRes = await fetch(`/api/get-chapters-quiz?board=${board}&class=${classLevel}&subject=${subject}&literatureType=${litType}`);
+
+            const chapters = await chaptersRes.json();
+
+            const chapterSelect = document.getElementById('quizChapter');
+            chapterSelect.innerHTML = '<option value="" disabled selected>Select Chapter</option>';
+
+            if (!Array.isArray(chapters) || chapters.length === 0) {
+                alert("⚠️ No chapters found. Check chapter_mapping_quiz.json or selection values.");
+
+                chapterSelect.innerHTML = '<option value="" disabled selected>No chapters found</option>';
                 return;
             }
-            
-            // Get board and class from localStorage
-            const board = localStorage.getItem('board');
-            const classLevel = localStorage.getItem('class');
-            
-            // For English, include literature type in the path
-            let fullPath = `gs://project-storagebucket/${board}/Class ${classLevel}/${subject}`;
-            if (subject.toLowerCase() === 'english') {
-                fullPath += `/${literatureType}`;
-            }
-            fullPath += `/${chapter.replace(/ /g, '_')}`;
-            // fullPath+=`.pdf`;
-            console.log(fullPath);
-            
-    
+
+                chapterSelect.innerHTML += chapters.map(chap => `<option value="${chap.value}">${chap.name}</option>`).join('');
+                chapterSelect.disabled = false;
+        });
+    } else {
+        literatureSelect.style.display = 'none';
+
+        // Fetch directly for non-English subjects
+        const chaptersRes = await fetch(`/api/get-chapters-quiz?board=${board}&class=${classLevel}&subject=${subject}`);
+        const chapters = await chaptersRes.json();
+
+        if (!Array.isArray(chapters) || chapters.length === 0) {
+            alert("⚠️ No chapters found. Check chapter_mapping_quiz.json or selection values.");
+            chapterSelect.innerHTML = '<option value="" disabled selected>No chapters found</option>';
+            return;
+        }
+
+        chapterSelect.innerHTML = `
+            <option value="" disabled selected>Select Chapter</option>
+            ${chapters.map(chap => `<option value="${chap.value}">${chap.name}</option>`).join('')}
+        `;
+        chapterSelect.disabled = false;
+    }
+});
+    });
+
+
+
+async function startQuiz() {
+    const subject = document.getElementById('quizSubject').value;
+    const chapter = document.getElementById('quizChapter').value;
+    const difficulty = document.getElementById('quizDifficulty').value;
+
+    const board = localStorage.getItem('board');
+    const classLevel = localStorage.getItem('class');
+
+    const literatureTypeDropdown = document.getElementById('literatureType');
+    const literatureType = (literatureTypeDropdown && literatureTypeDropdown.style.display !== 'none')
+        ? literatureTypeDropdown.value
+        : '';
+
+    // Validate inputs
+    if (!subject || !chapter || (subject === 'English' && !literatureType)) {
+        alert('Please select all required fields including Literature type for English.');
+        return;
+    }
+
+    // Build request
+    const requestBody = {
+        subject: subject,
+        chapter: chapter,
+        difficulty: difficulty
+    };
+
+    if (
+        subject.toLowerCase() === 'english' &&
+        parseInt(classLevel) >= 8 &&
+        parseInt(classLevel) !== 11 &&
+        literatureType
+    ) {
+        requestBody.literatureType = literatureType;
+    }
+
+    console.log("Sending to backend:", requestBody);  // ✅ Confirm this shows correct `literatureType`
+
+    // Show loading
     document.getElementById('quizArea').innerHTML = `
         <div class="loading">
             <p>Preparing your quiz...</p>
         </div>
     `;
-    
+
+    // Fetch quiz
     try {
-        // Generate quiz (using your existing endpoint)
         const response = await fetch('/generate-quiz', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                subject: subject,
-                chapter: chapter,
-                difficulty: difficulty
-            })
+            body: JSON.stringify(requestBody)
         });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to generate quiz');
-        }
-        
+
         const quizData = await response.json();
-        
-        if (quizData.questions && quizData.questions.length > 0) {
-            currentQuiz = {
-                questions: quizData.questions,
-                correctAnswers: quizData.questions.map(q => q.correctAnswer)
-            };
-            displayQuizQuestions(quizData.questions);
-        } else {
-            throw new Error('No questions generated');
-        }
+
+        if (!response.ok) throw new Error(quizData.error || 'Failed to generate quiz');
+        if (!quizData.questions || quizData.questions.length === 0) throw new Error('No questions generated');
+
+        currentQuiz = {
+            questions: quizData.questions,
+            correctAnswers: quizData.questions.map(q => q.correctAnswer)
+        };
+        displayQuizQuestions(quizData.questions);
     } catch (error) {
         document.getElementById('quizArea').innerHTML = `
             <div class="error-message">
@@ -426,6 +462,9 @@
         `;
     }
 }
+
+
+
 
 function displayQuizQuestions(questions) {
     const quizHTML = questions.map((q, i) => `
@@ -444,16 +483,15 @@ function displayQuizQuestions(questions) {
     `).join('');
     
     document.getElementById('quizArea').innerHTML = `
-        <h2>${document.getElementById('quizSubject').value} Quiz</h2>
-        <h3>${document.getElementById('quizChapter').value} (${document.getElementById('quizDifficulty').value})</h3>
-        <form id="quizForm">
-            ${quizHTML}
-            <div id="submitContainer" style="text-align: center; margin-top: 20px;">
-                <button type="button" id="submitBtn" onclick="submitQuiz()" disabled>Submit Quiz</button>
-            </div>
-        </form>
-    `;
-    
+    <h2>${document.getElementById('quizSubject').value} Quiz</h2>
+    <h3>${document.getElementById('quizChapter').options[document.getElementById('quizChapter').selectedIndex].textContent} (${document.getElementById('quizDifficulty').value})</h3>
+    <form id="quizForm">
+        ${quizHTML}
+        <div id="submitContainer" style="text-align: center; margin-top: 20px;">
+            <button type="button" id="submitBtn" onclick="submitQuiz()" disabled>Submit Quiz</button>
+        </div>
+    </form>
+`;
     // Add validation to enable submit button only when all questions are answered
     const radioButtons = document.querySelectorAll('input[type="radio"]');
     radioButtons.forEach(radio => {

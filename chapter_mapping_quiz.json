@@ -1,0 +1,595 @@
+{
+    "NCERT": {
+        "Class 6": {
+            "Maths": {
+    "Chapter 1": "Patterns in Mathematics",
+    "Chapter 2": "Lines and Angles",
+    "Chapter 3": "Number Play",
+    "Chapter 4": "Data Handling and Presentation",
+    "Chapter 5": "Prime Time",
+    "Chapter 6": "Perimeter and Area",
+    "Chapter 7": "Fractions",
+    "Chapter 8": "Playing with Constructions",
+    "Chapter 9": "Symmetry",
+    "Chapter 10": "The Other Side of Zero"
+}
+,
+            "Science": {
+    "Chapter 1": "The Wonderful World of Science",
+    "Chapter 2": "Diversity in the Living World",
+    "Chapter 3": "Mindful Eating: A Path to a Healthy Body",
+    "Chapter 4": "Exploring Magnets",
+    "Chapter 5": "Measurement of Length and Motion",
+    "Chapter 6": "Materials Around Us",
+    "Chapter 7": "Temperature and its Measurement",
+    "Chapter 8": "A Journey through States of Water",
+    "Chapter 9": "Methods of Separation in Everyday Life",
+    "Chapter 10": "Living Creatures: Exploring their Characteristics",
+    "Chapter 11": "Nature’s Treasures",
+    "Chapter 12": "Beyond Earth"
+}
+,
+            "English": {
+    "Chapter 1": "Fables and Folk Tales",
+    "Chapter 2": "Friendship",
+    "Chapter 3": "Nurturing Nature",
+    "Chapter 4": "Sports and Wellness",
+    "Chapter 5": "Culture and Tradition"
+},
+"Social": {
+    "Chapter 1": "Locating Places on the Earth",
+    "Chapter 2": "Oceans and Continents",
+    "Chapter 3": "Landforms and Life",
+    "Chapter 4": "Timeline and Sources of History",
+    "Chapter 5": "India, That Is Bharat",
+    "Chapter 6": "The Beginnings of Indian Civilisation",
+    "Chapter 7": "India’s Cultural Roots",
+    "Chapter 8": "Unity in Diversity, or ‘Many in the One’",
+    "Chapter 9": "Family and Community",
+    "Chapter 10": "Grassroots Democracy — Part 1: Governance",
+    "Chapter 11": "Grassroots Democracy — Part 2: Local Government in Rural Areas",
+    "Chapter 12": "Grassroots Democracy — Part 3: Local Government in Urban Areas",
+    "Chapter 13": "The Value of Work",
+    "Chapter 14": "Economic Activities Around Us"
+}
+},
+        "Class 7": {
+            "Maths": {
+    "Chapter 1": "Large Numbers Around Us",
+    "Chapter 2": "Arithmetic Expressions",
+    "Chapter 3": "A Peek Beyond the Point",
+    "Chapter 4": "Expressions using Letter-Numbers",
+    "Chapter 5": "Parallel and Intersecting Lines",
+    "Chapter 6": "Number Play",
+    "Chapter 7": "A Tale of Three Intersecting Lines",
+    "Chapter 8": "Working with Fractions"
+}
+,
+            "Science": {
+    "Chapter 1": "The Ever-Evolving World of Science",
+    "Chapter 2": "Exploring Substances: Acidic, Basic, and Neutral",
+    "Chapter 3": "Electricity: Circuits and Their Components",
+    "Chapter 4": "The World of Metals and Non-metals",
+    "Chapter 5": "Changes Around Us: Physical and Chemical",
+    "Chapter 6": "Adolescence: A Stage of Growth and Change",
+    "Chapter 7": "Heat Transfer in Nature",
+    "Chapter 8": "Measurement of Time and Motion",
+    "Chapter 9": "Life Processes in Animals",
+    "Chapter 10": "Life Processes in Plants",
+    "Chapter 11": "Light: Shadows and Reflections",
+    "Chapter 12": "Earth, Moon, and the Sun"
+}
+,
+            "English": {
+    "Chapter 1": "Learning Together",
+    "Chapter 2": "Wit and Humour",
+    "Chapter 3": "Dreams and Discoveries",
+    "Chapter 4": "Travel and Adventure",
+    "Chapter 5": "Bravehearts"
+},
+"Social": {
+    "Chapter 1": "Geographical Diversity of India",
+    "Chapter 2": "Understanding the Weather",
+    "Chapter 3": "Climates of India",
+    "Chapter 4": "New Beginnings: Cities and States",
+    "Chapter 5": "The Rise of Empires",
+    "Chapter 6": "The Age of Reorganisation",
+    "Chapter 7": "The Gupta Era: An Age of Tireless Creativity",
+    "Chapter 8": "How the Land Becomes Sacred",
+    "Chapter 9": "From the Rulers to the Ruled: Types of Governments",
+    "Chapter 10": "The Constitution of India — An Introduction",
+    "Chapter 11": "From Barter to Money",
+    "Chapter 12": "Understanding Markets"
+}
+},
+"Class 8":{
+    "Maths": {
+    "Chapter 1": "Rational Numbers",
+    "Chapter 2": "Linear Equations in One Variable",
+    "Chapter 3": "Understanding Quadrilaterals",
+    "Chapter 4": "Practical Geometry",
+    "Chapter 5": "Data Handling",
+    "Chapter 6": "Squares and Square Roots",
+    "Chapter 7": "Cubes and Cube Roots",
+    "Chapter 8": "Comparing Quantities",
+    "Chapter 9": "Algebraic Expressions and Identities",
+    "Chapter 10": "Visualising Solid Shapes",
+    "Chapter 11": "Mensuration",
+    "Chapter 12": "Exponents and Powers",
+    "Chapter 13": "Direct and Inverse Proportions",
+    "Chapter 14": "Factorisation",
+    "Chapter 15": "Introduction to Graphs",
+    "Chapter 16": "Playing with Numbers"
+},
+"Science": {
+    "Chapter 1": "The Ever-Evolving World of Science",
+    "Chapter 2": "Exploring Substances: Acidic, Basic, and Neutral",
+    "Chapter 3": "Electricity: Circuits and Their Components",
+    "Chapter 4": "The World of Metals and Non-metals",
+    "Chapter 5": "Changes Around Us: Physical and Chemical",
+    "Chapter 6": "Adolescence: A Stage of Growth and Change",
+    "Chapter 7": "Heat Transfer in Nature",
+    "Chapter 8": "Measurement of Time and Motion",
+    "Chapter 9": "Life Processes in Animals",
+    "Chapter 10": "Life Processes in Plants",
+    "Chapter 11": "Light: Shadows and Reflections",
+    "Chapter 12": "Earth, Moon, and the Sun"
+},
+"English": 
+{
+    "literature": {
+        "Chapter 1": "The Best Christmas Present in the World",
+        "Chapter 2": "The Tsunami",
+        "Chapter 3": "Glimpses of the Past",
+        "Chapter 4": "Bepin Choudhury’s Lapse of Memory",
+        "Chapter 5": "The Summit Within",
+        "Chapter 6": "This is Jody’s Fawn",
+        "Chapter 7": "A Visit to Cambridge",
+        "Chapter 8": "A Short Monsoon Diary" 
+    },
+    "supplementary": {
+        "Chapter 1": "How the Camel Got His Hump",
+        "Chapter 2": "Children at Work",
+        "Chapter 3": "The Selfish Giant",
+        "Chapter 4": "A Visit to the Circus",
+        "Chapter 5": "Princess September",
+        "Chapter 6": "The Treasure Within",
+        "Chapter 7": "The Comet – I",
+        "Chapter 8": "The Comet – II"
+    }
+},
+"History": {
+    "Chapter 1": "How, When and Where",
+    "Chapter 2": "From Trade to Territory",
+    "Chapter 3": "Ruling the Countryside",
+    "Chapter 4": "Tribals, Dikus and the Vision of a Golden Age",
+    "Chapter 5": "When People Rebel",
+    "Chapter 6": "Civilising the 'Native', Educating the Nation",
+    "Chapter 7": "Women, Caste and Reform",
+    "Chapter 8": "The Making of the National Movement: 1870s – 1947"
+},
+"Geography": {
+    "Chapter 1": "Resources",
+    "Chapter 2": "Land, Soil, Water, Natural Vegetation and Wildlife Resources",
+    "Chapter 3": "Agriculture",
+    "Chapter 4": "Industries",
+    "Chapter 5": "Human Resources"
+},
+"Civics": {
+    "Chapter 1": "The Indian Constitution",
+    "Chapter 2": "Understanding Secularism",
+    "Chapter 3": "Parliament and the Making of Laws",
+    "Chapter 4": "Judiciary",
+    "Chapter 5": "Understanding Marginalisation",
+    "Chapter 6": "Confronting Marginalisation",
+    "Chapter 7": "Public Facilities",
+    "Chapter 8": "Law and Social Justice"
+}
+},
+"Class 9":{
+    "Maths":{
+    "Chapter 1": "Number Systems",
+    "Chapter 2": "Polynomials",
+    "Chapter 3": "Coordinate Geometry",
+    "Chapter 4": "Linear Equations in Two Variables",
+    "Chapter 5": "Introduction to Euclid’s Geometry",
+    "Chapter 6": "Lines and Angles",
+    "Chapter 7": "Triangles",
+    "Chapter 8": "Quadrilaterals",
+    "Chapter 9": "Circles",
+    "Chapter 10": "Heron’s Formula",
+    "Chapter 11": "Surface Areas and Volumes",
+    "Chapter 12": "Statistics"
+},
+"Science":{
+    "Chapter 1": "Matter in Our Surroundings",
+    "Chapter 2": "Is Matter Around Us Pure?",
+    "Chapter 3": "Atoms and Molecules",
+    "Chapter 4": "Structure of the Atom",
+    "Chapter 5": "The Fundamental Unit of Life",
+    "Chapter 6": "Tissues",
+    "Chapter 7": "Motion",
+    "Chapter 8": "Force and Laws of Motion",
+    "Chapter 9": "Gravitation",
+    "Chapter 10": "Work and Energy",
+    "Chapter 11": "Sound",
+    "Chapter 12": "Improvement in Food Resources"
+},
+"History": {
+    "Chapter 1": "The French Revolution",
+    "Chapter 2": "Socialism in Europe and the Russian Revolution",
+    "Chapter 3": "Nazism and the Rise of Hitler",
+    "Chapter 4": "Forest Society and Colonialism",
+    "Chapter 5": "Pastoralists in the Modern World"
+},
+"Geography": {
+    "Chapter 1": "India – Size and Location",
+    "Chapter 2": "Physical Features of India",
+    "Chapter 3": "Drainage",
+    "Chapter 4": "Climate",
+    "Chapter 5": "Natural Vegetation and Wildlife",
+    "Chapter 6": "Population"
+},
+"English":{
+    "literature":{
+        "Chapter 1": "The Fun They Had",
+    "Chapter 2": "The Sound of Music",
+    "Chapter 3": "The Little Girl",
+    "Chapter 4": "A Truly Beautiful Mind",
+    "Chapter 5": "The Snake and the Mirror",
+    "Chapter 6": "My Childhood",
+    "Chapter 7": "Reach for the Top",
+    "Chapter 8": "Kathmandu",
+    "Chapter 9": "If I Were You"
+    },
+    "supplementary":{
+    "Chapter 1": "The Lost Child",
+    "Chapter 2": "The Adventures of Toto",
+    "Chapter 3": "Iswaran the Storyteller",
+    "Chapter 4": "In the Kingdom of Fools",
+    "Chapter 5": "The Happy Prince",
+    "Chapter 6": "Weathering the Storm in Ersama",
+    "Chapter 7": "The Last Leaf",
+    "Chapter 8": "A House is Not a Home",
+    "Chapter 9": "The Beggar"
+    }
+},
+"Economics": {
+    "Chapter 1": "The Story of Village Palampur",
+    "Chapter 2": "People as Resource",
+    "Chapter 3": "Poverty as a Challenge",
+    "Chapter 4": "Food Security in India"
+},
+"Civics": {
+    "Chapter 1": "What is Democracy? Why Democracy?",
+    "Chapter 2": "Constitutional Design",
+    "Chapter 3": "Electoral Politics",
+    "Chapter 4": "Working of Institutions",
+    "Chapter 5": "Democratic Rights"
+}
+},
+"Class 10":{
+    "Maths": {
+    "Chapter 1": "Real Numbers",
+    "Chapter 2": "Polynomials",
+    "Chapter 3": "Pair of Linear Equations in Two Variables",
+    "Chapter 4": "Quadratic Equations",
+    "Chapter 5": "Arithmetic Progressions",
+    "Chapter 6": "Triangles",
+    "Chapter 7": "Coordinate Geometry",
+    "Chapter 8": "Introduction to Trigonometry",
+    "Chapter 9": "Some Applications of Trigonometry",
+    "Chapter 10": "Circles",
+    "Chapter 11": "Areas Related to Circles",
+    "Chapter 12": "Surface Areas and Volumes",
+    "Chapter 13": "Statistics",
+    "Chapter 14": "Probability"
+},
+"Science": {
+    "Chapter 1": "Chemical Reactions and Equations",
+    "Chapter 2": "Acids, Bases, and Salts",
+    "Chapter 3": "Metals and Non-Metals",
+    "Chapter 4": "Carbon and Its Compounds",
+    "Chapter 5": "Life Processes",
+    "Chapter 6": "Control and Coordination",
+    "Chapter 7": "How Do Organisms Reproduce?",
+    "Chapter 8": "Heredity",
+    "Chapter 9": "Light – Reflection and Refraction",
+    "Chapter 10": "The Human Eye and the Colourful World",
+    "Chapter 11": "Electricity",
+    "Chapter 12": "Magnetic Effects of Electric Current",
+    "Chapter 13": "Our Environment"
+},
+"History": {
+    "Chapter 1": "The Rise of Nationalism in Europe",
+    "Chapter 2": "Nationalism in India",
+    "Chapter 3": "The Making of a Global World",
+    "Chapter 4": "The Age of Industrialisation",
+    "Chapter 5": "Print Culture and the Modern World"
+},
+"Geography": {
+  "Chapter 1": "Resources and Development",
+  "Chapter 2": "Forest and Wildlife Resources",
+  "Chapter 3": "Water Resources",
+  "Chapter 4": "Agriculture",
+  "Chapter 5": "Minerals and Energy Resources",
+  "Chapter 6": "Manufacturing Industries",
+  "Chapter 7": "Lifelines of National Economy"
+},
+"English":{
+    "literature":{
+    "Chapter 1": "A Letter to God",
+    "Chapter 2": "Nelson Mandela: Long Walk to Freedom",
+    "Chapter 3": "Two Stories about Flying",
+    "Chapter 4": "From the Diary of Anne Frank",
+    "Chapter 5": "Glimpses of India",
+    "Chapter 6": "Mijbil the Otter",
+    "Chapter 7": "Madam Rides the Bus",
+    "Chapter 8": "The Sermon at Benares",
+    "Chapter 9": "The Proposal"
+    },
+    "supplementary":{
+    "Chapter 1": "A Triumph of Surgery",
+    "Chapter 2": "The Thief’s Story",
+    "Chapter 3": "The Midnight Visitor",
+    "Chapter 4": "A Question of Trust",
+    "Chapter 5": "Footprints without Feet",
+    "Chapter 6": "The Making of a Scientist",
+    "Chapter 7": "The Necklace",
+    "Chapter 8": "Bholi",
+    "Chapter 9": "The Book That Saved the Earth"
+    }
+},
+"Economics": {
+  "Chapter 1": "Development",
+  "Chapter 2": "Sectors of the Indian Economy",
+  "Chapter 3": "Money and Credit",
+  "Chapter 4": "Globalisation and the Indian Economy",
+  "Chapter 5": "Consumer Rights"
+},
+"Civics": {
+  "Chapter 1": "Power Sharing",
+  "Chapter 2": "Federalism",
+  "Chapter 3": "Gender, Religion and Caste",
+  "Chapter 4": "Political Parties",
+  "Chapter 5": "Outcomes of Democracy"
+}
+},
+"Class 11":{
+    "English":{
+        
+      "Chapter 1": "The Portrait of a Lady",
+      "Chapter 2": "We're Not Afraid to Die... if We Can All Be Together",
+      "Chapter 3": "Discovering Tut: The Saga Continues",
+      "Chapter 4": "Landscape of the Soul",
+      "Chapter 5": "The Ailing Planet: The Green Movement's Role",
+      "Chapter 6": "The Browning Version",
+      "Chapter 7": "The Adventure",
+      "Chapter 8": "Silk Road"
+        },
+        "Biology": {
+  "Chapter 1": "The Living World",
+  "Chapter 2": "Biological Classification",
+  "Chapter 3": "Plant Kingdom",
+  "Chapter 4": "Animal Kingdom",
+  "Chapter 5": "Morphology of Flowering Plants",
+  "Chapter 6": "Anatomy of Flowering Plants",
+  "Chapter 7": "Structural Organisation in Animals",
+  "Chapter 8": "Cell: The Unit of Life",
+  "Chapter 9": "Biomolecules",
+  "Chapter 10": "Cell Cycle and Cell Division",
+  "Chapter 11": "Photosynthesis in Higher Plants",
+  "Chapter 12": "Respiration in Plants",
+  "Chapter 13": "Plant Growth and Development",
+  "Chapter 14": "Breathing and Exchange of Gases",
+  "Chapter 15": "Body Fluids and Circulation",
+  "Chapter 16": "Excretory Products and Their Elimination",
+  "Chapter 17": "Locomotion and Movement",
+  "Chapter 18": "Neural Control and Coordination",
+  "Chapter 19": "Chemical Coordination and Integration"
+},
+"Chemistry-Part1": {
+  "Chapter 1": "Some Basic Concepts of Chemistry",
+  "Chapter 2": "Structure of Atom",
+  "Chapter 3": "Classification of Elements and Periodicity in Properties",
+  "Chapter 4": "Chemical Bonding and Molecular Structure",
+  "Chapter 5": "Thermodynamics",
+  "Chapter 6": "Equilibrium"
+},
+"Chemistry-Part2": {
+  "Chapter 1": "Redox Reactions",
+  "Chapter 2": "Organic Chemistry – Some Basic Principles and Techniques",
+  "Chapter 3": "Hydrocarbons"
+},
+"Maths": {
+    "Chapter 1": "Sets",
+    "Chapter 2": "Relations and Functions",
+    "Chapter 3": "Trigonometric Functions",
+    "Chapter 4": "Complex Numbers and Quadratic Equations",
+    "Chapter 5": "Linear Inequalities",
+    "Chapter 6": "Permutations and Combinations",
+    "Chapter 7": "Binomial Theorem",
+    "Chapter 8": "Sequences and Series",
+    "Chapter 9": "Straight Lines",
+    "Chapter 10": "Conic Sections",
+    "Chapter 11": "Introduction to Three-Dimensional Geometry",
+    "Chapter 12": "Limits and Derivatives",
+    "Chapter 13": "Statistics",
+    "Chapter 14": "Probability"
+},
+"Physics-Part1": {
+  "Chapter 1": "Units and Measurements",
+  "Chapter 2": "Motion in a Straight Line",
+  "Chapter 3": "Motion in a Plane",
+  "Chapter 4": "Laws of Motion",
+  "Chapter 5": "Work, Energy and Power",
+  "Chapter 6": "System of Particles and Rotational Motion",
+  "Chapter 7": "Gravitation"
+},
+"Physics-Part2": {
+  "Chapter 1": "Mechanical Properties of Solids",
+  "Chapter 2": "Mechanical Properties of Fluids",
+  "Chapter 3": "Thermal Properties of Matter",
+  "Chapter 4": "Thermodynamics",
+  "Chapter 5": "Kinetic Theory",
+  "Chapter 6": "Oscillations",
+  "Chapter 7": "Waves"
+}
+    ,
+        "Business Studies": {
+    "Chapter 1": "Business, Trade and Commerce",
+    "Chapter 2": "Forms of Business Organisation",
+    "Chapter 3": "Private, Public and Global Enterprises",
+    "Chapter 4": "Business Services",
+    "Chapter 5": "Emerging Modes of Business",
+    "Chapter 6": "Social Responsibilities of Business and Business Ethics",
+    "Chapter 7": "Formation of a Company",
+    "Chapter 8": "Sources of Business Finance",
+    "Chapter 9": "Small Business and Entrepreneurship",
+    "Chapter 10": "Internal Trade",
+    "Chapter 11": "International Business"
+  },
+  "Financial accounting-Part1": {
+    "Chapter 1": "Introduction to Accounting",
+    "Chapter 2": "Theory Base of Accounting",
+    "Chapter 3": "Recording of Transactions I",
+    "Chapter 4": "Recording of Transactions II",
+    "Chapter 5": "Bank Reconciliation Statement",
+    "Chapter 6": "Trial Balance and Rectification of Errors",
+    "Chapter 7": "Depreciation, Provisions and Reserves"
+  },
+  "Financial accounting-Part2 ": {
+    "Chapter 8": "Financial Statements I",
+    "Chapter 9": "Financial Statements II"
+  }
+
+},
+"Class 12":{
+    "English":{
+        "literature":{
+        "Chapter 1": "The Last Lesson",
+      "Chapter 2": "Lost Spring",
+      "Chapter 3": "Deep Water",
+      "Chapter 4": "The Rattrap",
+      "Chapter 5": "Indigo",
+      "Chapter 6": "Poets and Pancakes",
+      "Chapter 7": "The Interview",
+      "Chapter 8": "Going Places"
+        },
+        "supplementary":{
+     "Chapter 1": "The Third Level",
+    "Chapter 2": "The Tiger King",
+    "Chapter 3": "Journey to the End of the Earth",
+    "Chapter 4": "The Enemy",
+    "Chapter 5": "On the Face of It",
+    "Chapter 6": "Memories of Childhood"
+        }
+    },
+   
+  "Biology": {
+    "Chapter 1": "Sexual Reproduction in Flowering Plants",
+    "Chapter 2": "Human Reproduction",
+    "Chapter 3": "Reproductive Health",
+    "Chapter 4": "Principles of Inheritance and Variation",
+    "Chapter 5": "Molecular Basis of Inheritance",
+    "Chapter 6": "Evolution",
+    "Chapter 7": "Human Health and Disease",
+    "Chapter 8": "Microbes in Human Welfare",
+    "Chapter 9": "Biotechnology: Principles and Processes",
+    "Chapter 10": "Biotechnology and Its Applications",
+    "Chapter 11": "Organisms and Populations",
+    "Chapter 12": "Ecosystem",
+    "Chapter 13": "Biodiversity and Conservation"
+  },
+  "Chemistry": {
+    "Chapter 1": "Solutions",
+    "Chapter 2": "Electrochemistry",
+    "Chapter 3": "Chemical Kinetics",
+    "Chapter 4": "The d- and f-Block Elements",
+    "Chapter 5": "Coordination Compounds",
+     "Chapter 6": "Haloalkanes and Haloarenes",
+    "Chapter 7": "Alcohols, Phenols and Ethers",
+    "Chapter 8": "Aldehydes, Ketones and Carboxylic Acids",
+    "Chapter 9": "Amines",
+    "Chapter 10": "Biomolecules"
+  },
+  "Physics": {
+    "Chapter 1": "Electric Charges and Fields",
+    "Chapter 2": "Electrostatic Potential and Capacitance",
+    "Chapter 3": "Current Electricity",
+    "Chapter 4": "Moving Charges and Magnetism",
+    "Chapter 5": "Magnetism and Matter",
+    "Chapter 6": "Electromagnetic Induction",
+    "Chapter 7": "Alternating Current",
+    "Chapter 8": "Electromagnetic Waves",
+    "Chapter 9": "Ray Optics and Optical Instruments",
+    "Chapter 10": "Wave Optics",
+    "Chapter 11": "Dual Nature of Radiation and Matter",
+    "Chapter 12": "Atoms",
+    "Chapter 13": "Nuclei",
+    "Chapter 14": "Semiconductor Electronics: Materials, Devices and Simple Circuits"
+  },
+  "Maths": {
+    "Chapter 1": "Relations and Functions",
+    "Chapter 2": "Inverse Trigonometric Functions",
+    "Chapter 3": "Matrices",
+    "Chapter 4": "Determinants",
+    "Chapter 5": "Continuity and Differentiability",
+    "Chapter 6": "Application of Derivatives",
+    "Chapter 7": "Integrals",
+    "Chapter 8": "Application of Integrals",
+    "Chapter 9": "Differential Equations",
+    "Chapter 10": "Vector Algebra",
+    "Chapter 11": "Three-Dimensional Geometry",
+    "Chapter 12": "Linear Programming",
+    "Chapter 13": "Probability"
+  }
+,
+    "Accountancy-Part1": {
+  "Chapter 1": "Accounting for Partnership Firms- Basic Concepts",
+  "Chapter 2": "Reconstitution of a Partnership Firm - Admission of a Partner",
+  "Chapter 3": "Reconstitution of a Partnership Firm - Retirement/Death of a Partner",
+  "Chapter 4": "Dissolution of Partnership Firm"
+},
+"Accountancy-Part2": {
+    "Chapter 1": "Accounting for Share Capital",
+    "Chapter 2": "Issue and Redemption of Debentures",
+    "Chapter 3": "Financial Statements of a Company",
+    "Chapter 4": "Analysis of Financial Statements",
+    "Chapter 5": "Accounting Ratios",
+    "Chapter 6": "Cash Flow Statement"
+  },
+  "Business Studies": {
+    "Chapter 1": "Nature and Significance of Management",
+    "Chapter 2": "Principles of Management",
+    "Chapter 3": "Business Environment",
+    "Chapter 4": "Planning",
+    "Chapter 5": "Organising",
+    "Chapter 6": "Staffing",
+    "Chapter 7": "Directing",
+    "Chapter 8": "Controlling",
+    "Chapter 9": "Financial Management",
+    "Chapter 10": "Marketing",
+    "Chapter 11": "Consumer Protection"
+  },
+  "Economics-Part2": {
+    "Chapter 1": "Introduction",
+    "Chapter 2": "Theory of Consumer Behaviour",
+    "Chapter 3": "Production and Costs",
+    "Chapter 4": "The Theory of the Firm under Perfect Competition",
+    "Chapter 5": "Market Equilibrium"
+  },
+  "Economics-Part1":{
+    "Chapter 1": "Introduction",
+    "Chapter 2": "National Income and Accounting",
+    "Chapter 3": "Money and Banking",
+    "Chapter 4": "Determination of Income and employment",
+    "Chapter 5": "Government Budget and Economy",
+    "Chapter 6": "Open Economy Macroeconomics"
+
+  }
+
+}
+
+}
+}

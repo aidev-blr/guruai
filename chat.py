@@ -57,7 +57,7 @@ def submit_path():
     try:
         data = request.get_json()
         gcs_path = data.get("path")
-        print(f"Received GCS path: {gcs_path}")
+        print(f" Received GCS path: {gcs_path}")
         if not gcs_path:
             return jsonify({"error": "Missing GCS path"}), 400
 
