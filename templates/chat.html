@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guru AI Chat</title>
+    <link rel="icon"  href="../static/icon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -63,26 +64,68 @@
             margin-bottom: 20px;
         }
         
+        /* General styling for option containers */
         .selection-options {
             display: flex;
-            gap: 15px;
+            gap: 10px; /* Reduced gap */
             margin-bottom: 15px;
             flex-wrap: wrap;
+            padding: 5px; /* Added padding */
+            border: 1px solid #e0e0e0; /* Added border */
+            border-radius: 8px; /* Rounded corners */
+            background-color: #ffffff; /* White background */
+        }
+
+        /* Styling for the dropdown display (e.g., "Select Chapter") */
+        .selection-dropdown-container {
+            position: relative;
+            display: inline-block; /* Allows side-by-side with other inline-block elements */
+            width: auto; /* Adjust as needed */
+        }
+
+        .dropdown-display {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+            cursor: pointer;
+            display: block; /* Make it a block within its container */
+            width: 100%; /* Take full width of its parent container */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
         }
         
-        select, button {
+        /* Styling for the actual buttons within selection-options */
+        .option-button {
             padding: 10px 15px;
             border-radius: 8px;
             border: 1px solid #ddd;
             font-size: 16px;
+            background: #f0f0f0; /* Lighter background for unselected */
+            color: #333;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
         }
         
-        button {
+        .option-button:hover {
+            background: #e0e0e0;
+        }
+        
+        .option-button.selected {
+            background: #4a1fb8;
+            color: white;
+            border-color: #4a1fb8;
+        }
+        
+        button { /* This applies to sendButton and submitButton */
             background: #4a1fb8;
             color: white;
             border: none;
             cursor: pointer;
             transition: background 0.3s;
+            padding: 12px 20px;
+            border-radius: 8px; /* Consistent border-radius */
+            font-size: 16px;
         }
         
         button:hover {
@@ -125,25 +168,25 @@
         }
         
         .bubble.bot {
-          padding: 12px 16px;
-          margin: 8px 0;
-          background-color: #f5f5f5;
-          border-radius: 12px;
-          max-width: 90%;
-          white-space: normal;
-          line-height: 1.6;
-          font-size: 15px;
-          overflow-x: auto;
-          word-break: break-word;
+            padding: 12px 16px;
+            margin: 8px 0;
+            background-color: #f5f5f5;
+            border-radius: 12px;
+            max-width: 90%;
+            white-space: normal;
+            line-height: 1.6;
+            font-size: 15px;
+            overflow-x: auto;
+            word-break: break-word;
         }
 
         .bubble.bot p {
-          margin: 10px 0;
+            margin: 10px 0;
         }
         
         .bubble.bot table {
-          margin-top: 10px;
-          margin-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
 
         .bubble.user {
@@ -268,18 +311,45 @@
                 gap: 10px;
             }
             
-            select, button {
+            .option-button {
                 width: 100%;
             }
         }
-         /* Add this new style for the literature dropdown */
-        .literature-select {
-            margin-top: 10px;
-            display: none;
+        
+        .hidden {
+            display: none !important;
         }
-        .social-select {
-            margin-top: 10px;
-            display: none;
+
+        /* Adjustments for the new selection-options structure */
+        .selection-area p {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        .literature-select {
+            width: 100%;
+            max-width: 300px;
+            padding: 10px 12px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 15px 0;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .literature-select:focus {
+            border-color: #007bff;
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        .literature-select option {
+            padding: 8px;
         }
 
 
@@ -292,9 +362,7 @@
       <h1 class="chat-title">Guru AI Chat</h1>
       <div class="user-info">
         <span>Board: <strong id="displayBoard">Loading...</strong></span>
-        <span> <strong id="displayClass">Loading...</strong></span>
-        <!-- <button id="editSettings" style="margin-left: 10px; background: none; border: none; color: #4a1fb8; cursor: pointer;">✏️ Edit</button> -->  
-        <!-- Show edit button only for admin -->
+        <span><strong id="displayClass">Loading...</strong></span>
         <span>User: <strong id="user-name">Guest</strong></span>
         <button onclick="window.location.href='/dashboard.html'" style="margin-left: 15px;">
           ← Back to Dashboard
@@ -302,25 +370,30 @@
       </div>
     </header>
 
+
     <div class="selection-area">
       <h2>Select Study Material</h2>
-      <div class="selection-options">
-        <select id="subjectSelect">
-          <option value="" disabled selected>Select Subject</option>
-        </select>
 
-        <select id="literatureType" class="literature-select">
-          <option value="" disabled selected>Select Sub-Subject</option>
-          <option value="literature">Literature</option>
-          <option value="supplementary">Supplementary</option>
-        </select>
+      <!-- Subject Selection -->
+      <p id="subject-message" class="hidden">Select Subject:</p>
+      <div id="subject-options" class="selection-options hidden"></div>
 
-        <select id="chapterSelect">
-          <option value="" disabled selected>Select Chapter</option>
-        </select>
-        
+    <!-- Literature Type (if English) -->
+      <select id="literatureType" class="literature-select  hidden">
+        <option value="" disabled selected>Select Sub-Subject</option>
+        <option value="literature">Literature</option>
+        <option value="supplementary">Supplementary</option>
+      </select>
 
+      <!-- Chapter Selection -->
+     <p id="chapter-message" class="hidden">Chat with AI:</p>
+      <div id="chapter-select-container" class="selection-dropdown-container">
+        <span id="chapter-selection-display" class="dropdown-display">Select Chapter</span>
+        <div id="chapter-options" class="selection-options hidden"></div>
       </div>
+
+
+
       <button id="submitButton">Load Material</button>
     </div>
 
@@ -338,154 +411,6 @@
     </div>
   </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  // Try to get from localStorage
-  let rawClass = localStorage.getItem('class');
-  let rawBoard = localStorage.getItem('board');
-
-  let classLevel = (!rawClass || rawClass === 'null' || rawClass === 'undefined') ? null : rawClass;
-  let board = (!rawBoard || rawBoard === 'null' || rawBoard === 'undefined') ? null : rawBoard;
-
-  // Fetch user data and fallback values from backend
-  try {
-    const userRes = await fetch('/api/user');
-    console.log("userRes:", userRes);
-    const userData = await userRes.json();
-    console.log("userData:", userData);
-    const user = userData.user || {};
-
-    document.getElementById('user-name').textContent = user.name || 'Guest';
-      classLevel = user.class;
-      console.log("classLevel:", classLevel);
-      localStorage.setItem('class', classLevel);
-
-      board = user.board;
-      console.log("board:", board);
-      localStorage.setItem('board', board);
-
-    // // Override localStorage if missing or invalid
-    if (!classLevel && user.class) {
-      classLevel = user.class;
-      console.log("classLevel:", classLevel);
-      localStorage.setItem('class', classLevel);
-    }
-
-    if (!board && user.board) {
-      board = user.board;
-      console.log("board:", board);
-      localStorage.setItem('board', board);
-    }
-
-    var stream = user.stream || 'NA';
-
-  } catch (err) {
-    console.warn("Failed to load user profile:", err);
-    stream = 'NA';
-  }
-
-  // Display board/class
-  document.getElementById('displayBoard').textContent = board || 'Unknown';
-  document.getElementById('displayClass').textContent = classLevel ? `Class ${classLevel}` : 'Class Not Set';
-
-  console.log("chat Loaded board:", board);
-  console.log("chat Loaded class:", classLevel);
-
-  // Load subjects
-  const subjectSelect = document.getElementById('subjectSelect');
-  const chapterSelect = document.getElementById('chapterSelect');
-  const literatureSelect = document.getElementById('literatureType');
-
-  try {
-    const subjectsRes = await fetch(`/api/get-subjects?class=${classLevel}&stream=${stream}`);
-    const subjects = await subjectsRes.json();
-
-    subjectSelect.innerHTML = `
-      <option value="" disabled selected>Select Subject</option>
-      ${Array.isArray(subjects) ? subjects.map(subj => `<option value="${subj}">${subj}</option>`).join('') : ''}
-    `;
-  } catch (err) {
-    console.error("Failed to load subjects:", err);
-    subjectSelect.innerHTML = `<option value="" disabled selected>Failed to load subjects</option>`;
-  }
-
-  subjectSelect.addEventListener('change', async () => {
-    const subject = subjectSelect.value;
-
-    literatureSelect.style.display = subject.toLowerCase() === 'english' ? 'block' : 'none';
-
-    chapterSelect.disabled = true;
-    chapterSelect.innerHTML = '<option value="" disabled selected>Loading chapters...</option>';
-
-    const literatureType = subject.toLowerCase() === 'english' ? literatureSelect.value : '';
-
-    const queryParams = new URLSearchParams({
-      subject,
-      board,
-      class: classLevel,
-    });
-    if (literatureType) queryParams.append('type', literatureType);
-  
-    try {
-      const chaptersRes = await fetch(`/api/get-chapters?${queryParams}`);
-      const chapters = await chaptersRes.json();
-
-      if (!Array.isArray(chapters)) throw new Error(chapters.error || 'Invalid chapter data');
-
-      chapterSelect.innerHTML = `
-        <option value="" disabled selected>Select Chapter</option>
-        ${chapters.map(chap => `<option value="${chap}">${chap}</option>`).join('')}
-      `;
-    } catch (err) {
-      console.error(err);
-      chapterSelect.innerHTML = '<option value="" disabled selected>Failed to load chapters</option>';
-    }
-
-    chapterSelect.disabled = false;
-  });
-
-  document.getElementById('submitButton').addEventListener('click', () => {
-    const subject = subjectSelect.value;
-    const chapter = chapterSelect.value;
-    const literatureType = literatureSelect.value;
-
-    if (!subject || !chapter) {
-      alert('Please select both subject and chapter');
-      return;
-    }
-
-    let fullPath = `gs://rag-project-storagebucket/${board}/Class ${classLevel}/${subject}`;
-    if (subject.toLowerCase() === 'english') {
-      fullPath += `/${literatureType}`;
-    }
-
-    fullPath += `/${chapter.replace(/ /g, '_').replace(/[()]/g, '')}.pdf`;
-    console.log(fullPath);
-
-    fetch('/api/chat/submit-path', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ path: fullPath })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === 'success') {
-          document.getElementById('userQuestion').disabled = false;
-          displayBotMessage("bot", "PDF loaded successfully. You can now ask your questions.");
-        } else {
-          alert('Error loading material: ' + (data.message || 'Unknown error'));
-        }
-      })
-      .catch(err => {
-        console.error('Submit error:', err);
-      });
-  });
-});
-</script>
-  
-  <script src="../static/chat.js"></script>
   <script src="../static/chat1.js"></script>
-  <!-- <script src="../static/script.js"></script> -->
 </body>
-
 </html>

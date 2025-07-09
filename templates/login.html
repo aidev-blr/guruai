@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login | Guru AI </title>
+  <link rel="icon"  href="../static/icon.ico">
+  
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -95,6 +97,13 @@
     .btn-primary:hover {
       background: #3a14a6;
     }
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
     .auth-footer {
       text-align: center;
       padding-bottom: 20px;
@@ -131,8 +140,25 @@
       margin-right: 10px;
       font-size: 32px;
     }
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #ddd;
+    }
+    .divider-text {
+      padding: 0 10px;
+      color: #666;
+      font-size: 14px;
+    }
   </style>
+
 </head>
+
 <body>
   <div class="auth-container">
     <div class="auth-header">
@@ -142,21 +168,50 @@
       </div>
       <p>Login to continue your learning journey</p>
     </div>
+
     <div class="auth-body">
-      <form id="loginForm">
+      <!-- Password Login Form (default) -->
+      <form id="loginFormPassword">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" class="form-control" name="email" placeholder="Enter your email" required>
-          <div class="error-message" id="emailError"></div>
+          <label for="identifier">Email or Username</label>
+          <input type="text" id="identifier" class="form-control" name="identifier" required>
+          <div id="identifierError" class="error-message"></div>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
-          <div class="error-message" id="passwordError"></div>
+          <input type="password" id="password" class="form-control" name="password" required>
+          <div id="passwordError" class="error-message"></div>
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
       </form>
+
+      <!-- Mobile OTP Login Form (hidden initially) -->
+      <form id="loginFormOTP" style="display: none;">
+        <div class="form-group">
+          <label for="mobile">Mobile Number</label>
+          
+          <input type="tel" id="mobile" class="form-control" name="mobile" pattern="[0-9]{10}" maxlength="10" placeholder="Enter 10-digit number" required>
+
+          <div id="mobileError" class="error-message"></div>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="sendOTP()" id="sendOtpButton">Send OTP</button>
+
+        <div class="form-group" id="otpGroup" style="display: none;">
+          <label for="otp">Enter OTP</label>
+          <input type="text" id="otp" class="form-control" name="otp" required>
+          <button type="button" class="btn btn-primary" onclick="verifyOTP()" id="verifyOtpButton">Verify & Login</button>
+        </div>
+      </form>
+
+      <!-- Switch Button -->
+      <div class="divider">
+        <span class="divider-text">or</span>
+      </div>
+      <button class="btn btn-secondary" id="switchLoginModeButton" onclick="toggleLoginMode()">Login with Mobile OTP</button>
+
     </div>
+    <div id="recaptcha-container"></div>
+
     <div class="auth-footer">
       <p><a href="{{ url_for('forgot_password_page') }}">Forgot Password?</a></p>
       <br>
@@ -164,46 +219,289 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+<!-- Firebase SDK with dynamic config -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    RecaptchaVerifier,
+    signInWithPhoneNumber,
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  /* ---------- Firebase initialisation ---------- */
+  const firebaseConfig = JSON.parse(`{{ firebase_config | safe }}`);
+  console.log("Firebase config loaded:", firebaseConfig);
+  
+  const app         = initializeApp(firebaseConfig);
+  const auth        = getAuth(app);
+  auth.useDeviceLanguage();
+  
+  console.log("Firebase initialized successfully");
+  console.log("Current hostname:", window.location.hostname);
+
+  /* ---------- Page elements ---------- */
+  const sendBtn     = document.getElementById("sendOtpButton");
+  const mobileIn    = document.getElementById("mobile");
+  const mobileErr   = document.getElementById("mobileError");
+  const otpGroup    = document.getElementById("otpGroup");
+  const otpIn       = document.getElementById("otp");
+
+  /* ---------- Globals ---------- */
+  let recaptchaVerifier;
+  let confirmationResult;
+  const MAX_SENDS = 3;          // per page-load
+  let sendCount   = 0;
+  let cooldown    = 0;
+  let cdTimer;
+
+  let RECAPTCHA_ENABLED = true;
+
+  /* ---------- reCAPTCHA (one instance!) ---------- */
+  function initRecaptcha () {
+    if (recaptchaVerifier) return;
+    
+    try {
+      recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+        size: "invisible",
+        callback: () => console.log("reCAPTCHA solved"),
+        "expired-callback": () => {
+          mobileErr.textContent =
+            "reCAPTCHA expired. Please click the button again.";
+          mobileErr.style.display = "block";
+        },
+      });
+      recaptchaVerifier.render();
+      console.log("reCAPTCHA initialized successfully");
+    } catch (error) {
+      console.error("reCAPTCHA initialization failed:", error);
+      RECAPTCHA_ENABLED = false;
+    }
+  }
+  window.onload = initRecaptcha;
+
+  /* ---------- Cool-down helper ---------- */
+  function startCooldown (seconds = 60) {
+    cooldown = seconds;
+    sendBtn.disabled = true;
+    sendBtn.textContent = `Resend in ${cooldown}s`;
+    cdTimer = setInterval(() => {
+      if (--cooldown === 0) {
+        clearInterval(cdTimer);
+        sendBtn.disabled = false;
+        sendBtn.textContent = "Resend OTP";
+      } else {
+        sendBtn.textContent = `Resend in ${cooldown}s`;
+      }
+    }, 1000);
+  }
+
+  /* ---------- Send OTP ---------- */
+  window.sendOTP = async function () {
+    mobileErr.style.display = "none";
+    const phone = `+91${mobileIn.value.trim()}`;
+    
+    if (!/^\+91[6-9]\d{9}$/.test(phone)) {
+      mobileErr.textContent = "Enter a valid 10-digit mobile number.";
+      mobileErr.style.display = "block";
+      return;
+    }
+    
+    if (sendCount >= MAX_SENDS) {
+      mobileErr.textContent =
+        "You've hit the limit. Please wait an hour then refresh the page.";
+      mobileErr.style.display = "block";
+      return;
+    }
+    
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending…";
+    
+    try {
+      // Check if mobile number exists in database
+      const checkRes = await fetch("/api/check-mobile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile: mobileIn.value.trim() })
+      });
+      
+      const checkData = await checkRes.json();
+      if (checkRes.ok && checkData.status === "success") {
+        if (!checkData.available) {
+          // Mobile number exists - proceed with OTP
+          console.log("Mobile number found in database, proceeding with OTP");
+        } else {
+          // Mobile number doesn't exist - show warning but still allow OTP
+          console.log("Mobile number not found, user will need to register");
+          if (confirm("This mobile number is not registered. You will need to register first after OTP verification. Continue?")) {
+            // Continue with OTP
+          } else {
+            sendBtn.disabled = false;
+            sendBtn.textContent = "Send OTP";
+            return;
+          }
+        }
+      }
+      
+      // Initialize reCAPTCHA if not already done
+      if (!recaptchaVerifier) {
+        initRecaptcha();
+      }
+      
+      // Verify reCAPTCHA if enabled
+      if (RECAPTCHA_ENABLED && recaptchaVerifier) {
+        await recaptchaVerifier.verify();
+      }
+      
+      confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phone,
+        recaptchaVerifier
+      );
+      
+      otpGroup.style.display = "block";
+      sendCount++;
+      startCooldown();
+      
+    } catch (err) {
+      console.error("OTP send error:", err);
+      
+      // Handle specific Firebase errors
+      if (err.code === "auth/captcha-check-failed") {
+        mobileErr.textContent = "reCAPTCHA verification failed. Please try again.";
+        mobileErr.style.display = "block";
+        // Reset reCAPTCHA if possible
+        if (recaptchaVerifier && typeof recaptchaVerifier.clear === 'function') {
+          recaptchaVerifier.clear();
+        }
+        // Re-initialize reCAPTCHA
+        recaptchaVerifier = null;
+        initRecaptcha();
+      } else if (err.code === "auth/too-many-requests") {
+        mobileErr.textContent = "Too many OTP requests. Wait an hour before trying again.";
+        mobileErr.style.display = "block";
+      } else if (err.code === "auth/invalid-phone-number") {
+        mobileErr.textContent = "Invalid phone number format.";
+        mobileErr.style.display = "block";
+      } else {
+        mobileErr.textContent = err.message || "Failed to send OTP. Please try again.";
+        mobileErr.style.display = "block";
+      }
+      
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Send OTP";
+    }
+  };
+
+  /* ---------- Verify OTP ---------- */
+  window.verifyOTP = async function () {
+    const otp = otpIn.value.trim();
+    mobileErr.style.display = "none";
+
+    if (!/^\d{6}$/.test(otp)) {
+      mobileErr.textContent = "Please enter the 6-digit OTP.";
+      mobileErr.style.display = "block";
+      return;
+    }
+
+    try {
+      const result  = await confirmationResult.confirm(otp);
+      const idToken = await result.user.getIdToken();
+      const phoneNumber = result.user.phoneNumber.replace("+91", "");
+
+      // Call backend to set Flask session
+      const res = await fetch("/api/login-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          mobile: phoneNumber,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.status === "success") {
+        // User exists - show welcome message
+        const userName = data.user_data.name || 'User';
+        alert(`Welcome back, ${userName}!`);
+        window.location.href = "/dashboard.html";
+      } else {
+        // Handle specific error cases
+        if (data.code === 'USER_NOT_FOUND') {
+          alert("Mobile number not found. Please register first.");
+          // Optionally redirect to registration page
+          if (confirm("Would you like to register now?")) {
+            window.location.href = "/register.html";
+          }
+        } else {
+          throw new Error(data.message || "Login failed on the server.");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      mobileErr.textContent =
+        err.message || "Invalid or expired OTP. Please try again.";
+      mobileErr.style.display = "block";
+    }
+  };
+
+  /* ---------- Switch login mode ---------- */
+  window.toggleLoginMode = function () {
+    const pwdForm   = document.getElementById("loginFormPassword");
+    const otpForm   = document.getElementById("loginFormOTP");
+    const switchBtn = document.getElementById("switchLoginModeButton");
+    const pwdVisible = pwdForm.style.display !== "none";
+
+    if (pwdVisible) {
+      pwdForm.style.display = "none";
+      otpForm.style.display = "block";
+      switchBtn.textContent = "Login with Email";
+    } else {
+      pwdForm.style.display = "block";
+      otpForm.style.display = "none";
+      switchBtn.textContent = "Login with Mobile OTP";
+    }
+  };
+
+  /* ---------- Email / password submit ---------- */
+  document
+    .getElementById("loginFormPassword")
+    .addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      // Clear previous errors
-      document.getElementById('emailError').style.display = 'none';
-      document.getElementById('passwordError').style.display = 'none';
+      const identifier     = document.getElementById("identifier").value.trim();
+      const password       = document.getElementById("password").value.trim();
+      const identifierErr  = document.getElementById("identifierError");
+      const passwordErr    = document.getElementById("passwordError");
+      identifierErr.style.display = "none";
+      passwordErr.style.display   = "none";
 
       try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ 
-            email, 
-            password
-          })
+        const res = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identifier, password }),
         });
-
-        const data = await response.json();
-
-        if (data.status === 'success') {
-          // Redirect to dashboard
-          window.location.href = '/dashboard.html';
+        const data = await res.json();
+        if (res.ok && data.status === "success") {
+          window.location.href = "/dashboard.html";
         } else {
-          const errorElement = document.getElementById('emailError');
-          errorElement.textContent = data.message || 'Login failed. Please try again.';
-          errorElement.style.display = 'block';
+          throw new Error(data.message || "Login failed.");
         }
-      } catch (error) {
-        console.error('Error:', error);
-        const errorElement = document.getElementById('emailError');
-        errorElement.textContent = 'An error occurred. Please try again.';
-        errorElement.style.display = 'block';
+      } catch (err) {
+        console.error(err);
+        // Show error in appropriate field based on the error type
+        if (err.message && err.message.toLowerCase().includes('password')) {
+          passwordErr.textContent = err.message;
+          passwordErr.style.display = "block";
+        } else {
+          identifierErr.textContent = err.message;
+          identifierErr.style.display = "block";
+        }
       }
     });
-  </script>
+
+</script>
+
+
 </body>
 </html>

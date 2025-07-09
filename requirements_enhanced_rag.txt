@@ -1,0 +1,13 @@
+# Enhanced RAG Dependencies
+google-cloud-aiplatform>=1.71.1
+vertexai>=1.71.1
+sentence-transformers>=4.1.0
+numpy>=2.2.5
+pypdf>=3.0.0
+firebase-admin>=6.8.0
+google-cloud-storage>=2.19.0
+google-cloud-firestore>=2.20.2
+
+# Optional: For better performance
+torch>=2.7.0
+transformers>=4.51.3 
